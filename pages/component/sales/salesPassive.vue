@@ -122,6 +122,7 @@
 							<view class="cu-form-group">
 								<view class="title">库位:</view>
 								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -148,7 +149,7 @@
 							<view class="text-grey">批号:{{item.fbatchNo}}</view>
 							<view class="text-grey">单位:{{item.unitName}}</view>
 							<view class="text-grey">规格:{{item.model}}</view>
-							<view class="text-grey"></view>
+							<view class="text-grey">仓位:{{item.positions}}</view>
 							<view class="text-grey">{{item.stockName}}</view>
 							<view class="text-grey">
 								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
@@ -158,7 +159,7 @@
 										</text>仓库</button>
 									</view>
 								</picker>
-								</view>
+							</view>
 						</view>
 						<view class="move">
 							<view class="bg-red" @tap="del(index,item)">删除</view>
@@ -209,6 +210,7 @@
 						FCustName: '',
 						fdeptID: '',
 					},
+					borrowItem: {},
 					popupForm: {
 						fbatchNo: '',
 						positions: '',
@@ -394,6 +396,7 @@
 				let array = []
 				let isBatchNo = false
 				let batchMsg = ''
+				let me = this
 				for(let i in list){
 					let obj = {}
 					obj.fauxqty = list[i].quantity
@@ -494,6 +497,9 @@
 				}
 			},
 			saveCom(){
+				this.borrowItem.quantity = this.popupForm.quantity
+				this.borrowItem.fbatchNo = this.popupForm.fbatchNo
+				this.borrowItem.positions = this.popupForm.positions
 				this.modalName2 = null
 			},
 			del(index, item) {
@@ -505,18 +511,21 @@
 			},
 			showModal2(index, item) {
 				this.modalName2 = 'Modal'
-				this.popupForm = {
-					quantity: '',
-					fbatchNo: '',
-					positions: ''
-				}
 				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
 					item.fbatchNo = ''
 				}
 				if(item.positions == null || typeof item.positions == 'undefined'){
 					item.positions = ''
 				}
-				this.popupForm = item
+				if(item.quantity == null || typeof item.quantity == 'undefined'){
+					item.quantity = ''
+				}
+				this.popupForm = {
+					quantity: item.quantity,
+					fbatchNo: item.fbatchNo,
+					positions: item.positions
+				}
+				this.borrowItem = item
 			},
 			hideModal(e) {
 				this.modalName = null
@@ -576,6 +585,14 @@
 		PickerChange(e, item) {
 			this.$set(item,'stockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'stockId', this.stockList[e.detail.value].FNumber);
+		},
+		scanPosition(){
+			let me = this
+			uni.scanCode({
+				success:function(res){
+					me.popupForm.positions = res.result
+				},
+			})
 		},
 		fabClick() {
 			var that = this

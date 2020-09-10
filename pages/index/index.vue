@@ -101,7 +101,7 @@ export default {
 		AndroidCheckUpdate2() {
 			var that = this;
 			uni.request({
-				url: 'http://193.112.40.179:8858/pda/output.json', //获取最新版本号
+				url: 'http://61.146.130.53:50432/pda/output.json', //获取最新版本号
 				method: 'GET',
 				data: {},
 				success: res => {
@@ -124,7 +124,7 @@ export default {
 
 						//res.data.androidurl    是apk的下载链接
 						console.log('准备');
-						var dtask = plus.downloader.createDownload('http://193.112.40.179:8858/pda/fzwm.apk', {}, function(d, status) {
+						var dtask = plus.downloader.createDownload('http://61.146.130.53:50432/pda/fzwm.apk', {}, function(d, status) {
 							console.log('开始');
 							// 下载完成
 							if (status == 200) {
@@ -155,7 +155,7 @@ export default {
 			var _this = this;
 			uni.request({
 				//请求地址，设置为自己的服务器链接
-				url: 'http://193.112.40.179:8858/pda/output.json',
+				url: 'http://61.146.130.53:50432/pda/output.json',
 				method: 'GET',
 				data: {},
 				success: resMz => {
@@ -203,7 +203,7 @@ export default {
 		},
 		downWgt: function() {
 			var that = this;
-			var downloadApkUrl = 'http://193.112.40.179:8858/pda/fzwm.apk';
+			var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwm.apk';
 			var dtask = plus.downloader.createDownload(downloadApkUrl, {}, function(d, status) {
 				// 下载完成
 				if (status == 200) {
@@ -282,7 +282,7 @@ export default {
 								}); */
 								that.downWgt(); //下载文件
 								/* //设置 最新版本apk的下载链接
-								var downloadApkUrl = 'http://193.112.40.179:8858/pda/fzwm.apk';
+								var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwm.apk';
 								var dtask = plus.downloader.createDownload(downloadApkUrl, {}, function(d, status) {
 									// 下载完成
 									if (status == 200) {

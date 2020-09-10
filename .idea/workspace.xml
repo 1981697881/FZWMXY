@@ -1,18 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e28694b8-08e7-4125-8fac-f3a67eaed054" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/emitActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/emitActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/emitPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/emitPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/storageActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/storageActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/storagePassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/storagePassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/procurement/procurementActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/procurement/procurementActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/procurement/procurementPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/procurement/procurementPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/productActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/productActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/productPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/productPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/receiveActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/receiveActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/receivePassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/receivePassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/sales/salesActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/sales/salesActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/setting.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/setting.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/ICReceive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/ICReceive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/InventoryDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/InventoryDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/dishDeficient.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/dishDeficient.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/inventoryProfit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/inventoryProfit.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/otherOutbound.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/otherOutbound.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/shelves.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/shelves.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/transfersActive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/transfersActive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/undercarriage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/undercarriage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index/index.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1hH2XmPypCMB3aqJ7bLoKgbyr9U" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e28694b8-08e7-4125-8fac-f3a67eaed054" name="Default Changelist" comment="" />
+      <created>1599653738916</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599653738916</updated>
+      <workItem from="1599653740607" duration="1365000" />
+      <workItem from="1599719647551" duration="637000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="732" y="266" key="FileChooserDialogImpl" timestamp="1599653763546">
+    <state x="732" y="266" key="FileChooserDialogImpl" timestamp="1599654044136">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="732" y="266" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1599653763546" />
+    <state x="732" y="266" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1599654044136" />
+    <state x="824" y="415" width="273" height="219" key="Github.ShareDialog" timestamp="1599656357903">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="824" y="415" width="273" height="219" key="Github.ShareDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1599656357903" />
+    <state x="663" y="230" key="Github.UntrackedFilesDialog" timestamp="1599656518644">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="663" y="230" key="Github.UntrackedFilesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1599656518644" />
+    <state x="453" y="167" key="SettingsEditor" timestamp="1599654027883">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="453" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1599654027883" />
   </component>
 </project>

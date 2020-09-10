@@ -125,6 +125,7 @@
 							<view class="cu-form-group">
 								<view class="title">库位:</view>
 								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -141,7 +142,7 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 240upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
@@ -152,7 +153,8 @@
 							<view class="text-grey">{{item.FNoteType}}</view>
 							<view class="text-grey">批号:{{item.fbatchNo}}</view>
 							<view class="text-grey">数量:{{item.quantity}}</view>
-							
+							<view class="text-grey"></view>
+							<view class="text-grey">仓位:{{item.positions}}</view>
 							<view class="text-grey">{{item.stockName}}</view>
 							<view class="text-grey">
 								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
@@ -214,6 +216,7 @@
 						fdeptID: '',
 						FSupplyID: '',
 					},
+					borrowItem: {},
 					popupForm: {
 						fbatchNo: '',
 						positions: '',
@@ -401,6 +404,7 @@
 				let result = []
 				let list = this.cuIList
 				let array = []
+				let me = this
 				let isBatchNo = false
 				let batchMsg = ''
 				for(let i in list){
@@ -443,7 +447,7 @@
 					array.push(obj)	
 				}
 				portData.items = array
-				portData.ftranType = 1
+				portData.ftranType = 1 
 				portData.finBillNo = this.form.finBillNo
 				portData.fdate = this.form.fdate
 				portData.fcardNum = this.form.fcardNum
@@ -452,9 +456,6 @@
 				portData.fsupplyId = this.form.FSupplyID
 				portData.fpostyle = this.form.FPOStyle
 				portData.fdeptId = this.form.fdeptID
-				
-				console.log(JSON.stringify(portData))
-				console.log(isBatchNo)
 				if(result.length == 0){
 					if(portData.fsupplyId != '' && typeof portData.fsupplyId != 'undefined'){
 					if(isBatchNo){
@@ -510,6 +511,9 @@
 					});
 					this.popupForm.quantity = 0
 				}else{
+					this.borrowItem.quantity = this.popupForm.quantity
+					this.borrowItem.fbatchNo = this.popupForm.fbatchNo
+					this.borrowItem.positions = this.popupForm.positions
 					this.modalName2 = null
 				}
 			},
@@ -525,21 +529,22 @@
 			},
 			showModal2(index, item) {
 				this.modalName2 = 'Modal'
-				this.popupForm = {
-					quantity: '',
-					fbatchNo: '',
-					positions: ''
-				}
 				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
 					item.fbatchNo = ''
 				}
 				if(item.positions == null || typeof item.positions == 'undefined'){
 					item.positions = ''
 				}
-				this.popupForm = item
-				
+				if(item.quantity == null || typeof item.quantity == 'undefined'){
+					item.quantity = ''
+				}
+				this.popupForm = {
+					quantity: item.quantity,
+					fbatchNo: item.fbatchNo,
+					positions: item.positions
+				}
+				this.borrowItem = item
 			},
-			
 			hideModal2(e) {
 				this.modalName2 = null
 			},
@@ -596,12 +601,19 @@
 			this.$set(item,'stockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'stockId', this.stockList[e.detail.value].FNumber);
 		},
+		scanPosition(){
+			let me = this
+			uni.scanCode({
+				success:function(res){
+					me.popupForm.positions = res.result
+				},
+			})
+		},
 		fabClick() {
 			var that = this
 			uni.scanCode({
 				success:function(res){
 					basic.barcodeScan({'uuid':res.result}).then(reso => {
-							console.log(reso)
 						if(reso.success){
 							if(that.isOrder){
 								//if(reso.data['billNo'] == this.billNo){

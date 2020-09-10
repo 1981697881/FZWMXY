@@ -84,8 +84,8 @@
 		},
 		onLoad: function (option){
 			if(JSON.stringify(option) != "{}"){
-				this.start = option.startDate  
-				this.end = option.endDate
+				this.start = this.getDay('', 0).date
+				this.end = this.getDay('', 3).date
 				if(option.source != null){
 					this.source = option.source
 				}

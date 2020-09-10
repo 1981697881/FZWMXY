@@ -178,6 +178,7 @@
 						fdCStockId: '',
 						fdeptID: '',
 					},
+					borrowItem: {},
 					popupForm: {
 						quantity: '',
 						FBatchNo: '',
@@ -347,6 +348,9 @@
 					});
 				}else{
 					this.popupForm.fauxqty = Math.round((this.popupForm.quantity - this.popupForm.FQty) * 100) / 100
+					this.borrowItem.fauxqty = this.popupForm.fauxqty
+					this.borrowItem.FBatchNo = this.popupForm.FBatchNo
+					this.borrowItem.positions = this.popupForm.positions
 					this.modalName2 = null
 				}
 				
@@ -360,15 +364,21 @@
 			},
 			showModal2(index, item) {
 				this.modalName2 = 'Modal'
-				this.popupForm = {
-					quantity: '',
-					FBatchNo: '',
-					fauxqty: '',
-				}
 				if(item.FBatchNo == null || typeof item.FBatchNo == 'undefined'){
 					item.FBatchNo = ''
 				}
-				this.popupForm = item
+				if(item.positions == null || typeof item.positions == 'undefined'){
+					item.positions = ''
+				}
+				if(item.fauxqty == null || typeof item.fauxqty == 'undefined'){
+					item.fauxqty = ''
+				}
+				this.popupForm = {
+					fauxqty: item.fauxqty,
+					FBatchNo: item.FBatchNo,
+					positions: item.positions
+				}
+				this.borrowItem = item
 			},
 			hideModal(e) {
 				this.modalName = null
@@ -428,6 +438,14 @@
 		PickerChange(e, item) {
 			this.$set(item,'FStockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'FStockNumber', this.stockList[e.detail.value].FNumber);
+		},
+		scanPosition(){
+			let me = this
+			uni.scanCode({
+				success:function(res){
+					me.popupForm.positions = res.result
+				},
+			})
 		},
 		fabClick() {
 			var that = this

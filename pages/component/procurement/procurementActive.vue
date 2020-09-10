@@ -81,14 +81,13 @@
 			})
 		},
 		onLoad: function (option){
-			console.log(option)
 			if(JSON.stringify(option) != "{}"){
-			this.start = option.startDate  
-			this.end = option.endDate
-			if(option.source != null){
-				this.source = option.source
-			}
-			this.fetchData()
+				this.start = this.getDay('', 0).date  
+				this.end = this.getDay('', 3).date
+				if(option.source != null){
+					this.source = option.source
+				}
+				this.fetchData()
 			}else{
 				this.start = this.getDay('', 0).date
 				this.end = this.getDay('', 3).date
@@ -117,7 +116,6 @@
 		},
 		methods: {
 			showList(index, item){
-				console.log(item)
 				uni.navigateTo({
 					//url: '../procurement/procurementPassive?Fdate='+item.Fdate+'&FBillNo='+item.FBillNo+'&FNumber='+item.FItemNumber+'&FItemName='+item.FItemName+'&FModel='+item.FModel+'&Fauxqty='+item.Fauxqty+'&fsourceBillNo='+item.FBillNo+'&fsourceEntryID='+item.FSourceEntryID+'&fsourceTranType='+item.FTranType+'&FUnitNumber='+item.FUnitNumber+'&FSupplyName='+item.FSupplyName+'&FSupplyID='+item.FSupplyNumber+'&FUnitName='+item.FUnitName+'&FPOStyle='+item.FPOStyle+'&FEntryID='+item.FEntryID+'&Famount='+item.Famount+'&Fauxprice='+item.Fauxprice+'&FDeptNumber='+item.FDeptNumber+'&Fauxqty='+item.Fauxqty
 					url: '../procurement/procurementPassive?billNo='+item.FBillNo+'&tranType='+this.source+'&type=2&startDate='+this.start+'&endDate='+this.end+'&FDeptNumber='+item.FDeptNumber+'&FSupplyID='+item.FSupplyNumber+'&FSupplyName='+item.FSupplyName
@@ -179,8 +177,8 @@
 				      qFilter() { 
 				        let obj = {}
 				        this.keyword != null && this.keyword != '' ? obj.billNo = this.keyword : null
-				        this.start != null && this.start != undefined ? obj.startDate = this.start : null
-				        this.end != null && this.end != undefined ? obj.endDate = this.end : null
+				        this.start != null && this.start != '' ? obj.startDate = this.start : null
+				        this.end != null && this.end != '' ? obj.endDate = this.end : null
 				        obj.tranType = this.source
 						obj.type = 2
 						return obj
