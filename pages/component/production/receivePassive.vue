@@ -80,7 +80,7 @@
 		</view>
 	</view>
 	<view class="cu-modal" :class="modalName2=='Modal'?'show':''">
-		<view class="cu-dialog" style="height: 150px;">
+		<view class="cu-dialog" style="height: 350upx;">
 			<view class="cu-bar bg-white justify-end" style="height: 60upx;">
 				<view class="content">{{popupForm.headName}}</view>
 				<view class="action" @tap="hideModal2">
@@ -127,7 +127,7 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 220upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>

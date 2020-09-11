@@ -31,6 +31,7 @@
 							<view class="text-grey">名称:{{item.FName}}</view>
 							<view class="text-grey">规格:{{item.FModel}}</view>
 							<view class="text-grey">仓库:{{item.FStockName}}</view>
+							<view class="text-grey">库位:{{item.FStockPlacename}}</view>
 							<view class="text-grey">批号:{{item.FBatchNo}}</view>
 							<!-- <view class="text-grey">数量:{{item.FQty}}</view>
 							<view class="text-grey">单位:{{item.FUnitName}}</view> -->

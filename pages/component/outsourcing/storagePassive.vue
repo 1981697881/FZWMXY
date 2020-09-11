@@ -80,7 +80,7 @@
 		</view>
 	</view>
 	<view class="cu-modal" :class="modalName2=='Modal'?'show':''">
-		<view class="cu-dialog" style="height: 150px;">
+		<view class="cu-dialog" style="height: 350upx;">
 			<view class="cu-bar bg-white justify-end" style="height: 60upx;">
 				<view class="content">{{popupForm.headName}}</view>
 				<view class="action" @tap="hideModal2">
