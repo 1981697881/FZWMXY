@@ -84,7 +84,7 @@ export default {
 		},
 		downWgt: function() {
 			var that = this;
-			var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwm.apk';
+			var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwmxy.apk';
 			var dtask = plus.downloader.createDownload(downloadApkUrl, {}, function(d, status) {
 				// 下载完成
 				if (status == 200) {
@@ -168,7 +168,7 @@ export default {
 											}); */
 										that.downWgt();
 										//设置 最新版本apk的下载链接
-										/* var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwm.apk';
+										/* var downloadApkUrl = 'http://61.146.130.53:50432/pda/fzwmxy.apk';
 											var dtask = plus.downloader.createDownload(downloadApkUrl, {}, function(d, status) {
 												// 下载完成
 												if (status == 200) {

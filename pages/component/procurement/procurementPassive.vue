@@ -95,7 +95,7 @@
 		</view>
 	</view>
 	<view class="cu-modal" :class="modalName2=='Modal'?'show':''">
-		<view class="cu-dialog" style="height: 350upx;">
+		<view class="cu-dialog" style="height: 500upx;">
 			<view class="cu-bar bg-white justify-end" style="height: 60upx;">
 				<view class="content">{{popupForm.headName}}</view>
 				<view class="action" @tap="hideModal2">
@@ -120,6 +120,15 @@
 					</view>
 				</view>
 				<view class="cu-item" style="width: 100%;">
+					<view class="flex">
+						<view class="flex-sub">
+							<view class="cu-form-group">
+								<view class="title">流程卡号:</view>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.fcardNum"></input>
+							</view>
+						</view>
+					</view>
+				</view><view class="cu-item" style="width: 100%;">
 					<view class="flex">
 						<view class="flex-sub">
 							<view class="cu-form-group">
@@ -153,11 +162,11 @@
 							<view class="text-grey">{{item.FNoteType}}</view>
 							<view class="text-grey">批号:{{item.fbatchNo}}</view>
 							<view class="text-grey">数量:{{item.quantity}}</view>
-							<view class="text-grey"></view>
+							<view class="text-grey">流程卡号:{{item.fcardNum}}</view>
 							<view class="text-grey">仓位:{{item.positions}}</view>
 							<view class="text-grey">{{item.stockName}}</view>
 							<view class="text-grey">
-								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
+								<picker @change="PickerChange($event, item)" @click.stop="showModal2" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
 										<text class="cuIcon-homefill">
@@ -221,6 +230,7 @@
 						fbatchNo: '',
 						positions: '',
 						quantity: '',
+						fcardNum: '',
 					},
 					skin: false,
 					listTouchStart: 0,
@@ -324,9 +334,6 @@
 								}, 1000);
 						     }
 						});
-						
-						
-						 
 				}
 			}
 			
@@ -443,6 +450,7 @@
 					obj.fsourceBillNo = list[i].fsourceBillNo == null || list[i].fsourceBillNo == "undefined" ? '' :  list[i].fsourceBillNo 
 					obj.fsourceEntryID = list[i].fsourceEntryID == null || list[i].fsourceEntryID == "undefined" ? '' :  list[i].fsourceEntryID 
 					obj.fsourceTranType = list[i].fsourceTranType == null || list[i].fsourceTranType == "undefined" ? '' :  list[i].fsourceTranType
+					obj.fcardNum = list[i].fcardNum
 					obj.funitId = list[i].unitID
 					array.push(obj)	
 				}
@@ -450,7 +458,7 @@
 				portData.ftranType = 1 
 				portData.finBillNo = this.form.finBillNo
 				portData.fdate = this.form.fdate
-				portData.fcardNum = this.form.fcardNum
+				//portData.fcardNum = this.form.fcardNum
 				portData.fsManagerID = this.form.fbillerID
 				portData.fbillerID = this.form.fbillerID
 				portData.fsupplyId = this.form.FSupplyID
@@ -514,6 +522,7 @@
 					this.borrowItem.quantity = this.popupForm.quantity
 					this.borrowItem.fbatchNo = this.popupForm.fbatchNo
 					this.borrowItem.positions = this.popupForm.positions
+					this.borrowItem.fcardNum = this.popupForm.fcardNum
 					this.modalName2 = null
 				}
 			},
@@ -538,9 +547,13 @@
 				if(item.quantity == null || typeof item.quantity == 'undefined'){
 					item.quantity = ''
 				}
+				if(item.fcardNum == null || typeof item.fcardNum == 'undefined'){
+					item.fcardNum = ''
+				}
 				this.popupForm = {
 					quantity: item.quantity,
 					fbatchNo: item.fbatchNo,
+					fcardNum: item.fcardNum,
 					positions: item.positions
 				}
 				this.borrowItem = item
@@ -605,7 +618,18 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.positions = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data.length >0){
+							me.popupForm.positions = res.result
+							me.popupForm.positions = res.result
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+						
+					})
 				},
 			})
 		},

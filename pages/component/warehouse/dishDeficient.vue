@@ -185,6 +185,7 @@
 						fauxqty: '',
 					},
 					skin: false,
+					isPan: null,
 					listTouchStart: 0,
 					listTouchDirection: null,
 					deptList: [],
@@ -312,30 +313,57 @@
 				portData.fbillerID = this.form.fbillerID
 				portData.fdeptId = this.form.fdeptID
 				console.log(JSON.stringify(portData))
-				warehouse.invLossStockOut(portData).then(res => {
-				if(res.success){
-						this.cuIList = []
+				if(isPan){
+					warehouse.invLossStockOut(portData).then(res => {
+						if(res.success){
+								this.cuIList = []
+								uni.showToast({
+									icon: 'success',
+									title: res.msg,
+								});
+								this.form.bNum = 0
+								this.initMain()
+						}
+					}).catch(err => {
 						uni.showToast({
-							icon: 'success',
-							title: res.msg,
+							icon: 'none',
+							title: err.msg,
 						});
-						this.form.bNum = 0
-						this.initMain()
+					})
+				}else{
+					warehouse.invProFitStockOut(portData).then(res => {
+						if(res.success){
+								this.cuIList = []
+								uni.showToast({
+									icon: 'success',
+									title: res.msg,
+								});
+								this.form.bNum = 0
+								this.initMain()
+						}
+					}).catch(err => {
+						uni.showToast({
+							icon: 'none',
+							title: err.msg,
+						});
+					})
 				}
-				}).catch(err => {
-					uni.showToast({
-						icon: 'none',
-						title: err.msg,
-					});
-				})
+				
 			},
 			saveCom(){
 				if((this.popupForm.FQty - this.popupForm.quantity)< 1){
-					return uni.showToast({
+					/* return uni.showToast({
 						icon: 'none',
 						title: '盘亏数量不能小于零或等于零',
-					});
+					}); */
+					this.isPan = false
+					this.popupForm.fauxqty = Math.round((this.popupForm.quantity - this.popupForm.FQty) * 100) / 100
+					this.borrowItem.fauxqty = this.popupForm.fauxqty
+					this.borrowItem.FBatchNo = this.popupForm.FBatchNo
+					this.borrowItem.positions = this.popupForm.positions
+					this.modalName2 = null
 				}else{
+					this.isPan = true
 					this.popupForm.fauxqty = Math.round((this.popupForm.FQty - this.popupForm.quantity) * 100) / 100
 					this.borrowItem.fauxqty = this.popupForm.fauxqty
 					this.borrowItem.FBatchNo = this.popupForm.FBatchNo

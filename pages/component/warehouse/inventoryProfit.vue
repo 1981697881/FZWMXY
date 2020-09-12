@@ -318,15 +318,15 @@
 				console.log(JSON.stringify(portData))
 				if(result.length == 0){
 					warehouse.invProFitStockOut(portData).then(res => {
-					if(res.success){
-							this.cuIList = []
-							uni.showToast({
-								icon: 'success',
-								title: res.msg,
-							});
-							this.form.bNum = 0
-							this.initMain()
-					}
+						if(res.success){
+								this.cuIList = []
+								uni.showToast({
+									icon: 'success',
+									title: res.msg,
+								});
+								this.form.bNum = 0
+								this.initMain()
+						}
 					}).catch(err => {
 						uni.showToast({
 							icon: 'none',

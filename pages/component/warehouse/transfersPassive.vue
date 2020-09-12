@@ -89,6 +89,17 @@
 						</view>
 					</view>
 				</view>
+				<view class="cu-item" style="width: 100%;">
+					<view class="flex">
+						<view class="flex-sub">
+							<view class="cu-form-group">
+								<view class="title">库位:</view>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
+							</view>
+						</view>
+					</view>
+				</view>
 			</view>
 			<view style="clear: both;" class="cu-bar bg-white justify-end padding-bottom-xl">
 				<view class="action">
@@ -182,6 +193,7 @@
 					popupForm: {
 						quantity: '',
 						fbatchNo: '',
+						positions: '',
 					},
 					skin: false,
 					listTouchStart: 0,
@@ -358,6 +370,7 @@
 					obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
 					obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
 					obj.funitId = list[i].FUnitID
+					obj.fdCSPId = list[i].positions
 					obj.fsourceBillNo = list[i].fsourceBillNo == null || list[i].fsourceBillNo == "undefined" ? '' :  list[i].fsourceBillNo
 					obj.fsourceEntryID = list[i].fsourceEntryID == null || list[i].fsourceEntryID == "undefined" ? '' :  list[i].fsourceEntryID 
 					obj.fsourceTranType = list[i].fsourceTranType == null || list[i].fsourceTranType == "undefined" ? '' :  list[i].fsourceTranType

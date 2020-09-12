@@ -9,6 +9,14 @@ export default {
             },
 			data: params
         });
+    },//扫码
+    selectFdCStockIdByFdCSPId(params) {
+        return Request().get('/api/basic/selectFdCStockIdByFdCSPId', {
+            header: {
+				accept: '*/*'
+            },
+			data: params
+        });
     },//扫码获取库存
     inventoryByBarcode(params) {
         return Request().get('/api/basic/inventoryByBarcode', {
