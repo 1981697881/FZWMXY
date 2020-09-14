@@ -86,7 +86,7 @@
 				<view class="content">{{popupForm.headName}}</view>
 				<view class="action" @tap="hideModal2">
 					<text class="cuIcon-close text-red"></text>
-				</view>
+				</view>  
 			</view>
 			<view>
 				<view class="cu-item" style="width: 100%;">

@@ -3,7 +3,7 @@
 	<cu-custom bgColor="bg-gradual-blue" :isBack="true"><block slot="backText">返回</block><block slot="content">生产管理</block></cu-custom>
 	<scroll-view scroll-y class="page">
 		<view class="nav-list">
-			<navigator hover-class='none' :url="'/pages/component/production/' + item.path+'?source='+item.source" class="nav-li" navigateTo :class="'bg-'+item.color"
+			<navigator hover-class='none' :url="'/pages/component/production/' + item.path+ (item.source != null?'?source='+item.source: '')" class="nav-li" navigateTo :class="'bg-'+item.color"
 			 :style="[{animation: 'show ' + ((index+1)*0.2+1) + 's 1'}]" v-for="(item,index) in elements" :key="index">
 				<view class="nav-title">{{item.name}}</view>
 				<view class="nav-name">{{item.title}}</view>

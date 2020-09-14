@@ -33,7 +33,7 @@
 				<navigator
 					v-if="item.color == 'olive' ? false : true"
 					hover-class="none"
-					:url="'/pages/component/warehouse/' + item.path+'?source='+item.source"
+					:url="'/pages/component/warehouse/' + item.path+ (item.source != null?'?source='+item.source: '')"
 					class="nav-li"
 					navigateTo
 					:class="'bg-' + item.color"

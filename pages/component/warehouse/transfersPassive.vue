@@ -38,7 +38,7 @@
 				        v-model="form.fdcStockID"
 				        @change="stockChange1"></ld-select>
 			</view>
-			<view class="action">
+			<!-- <view class="action">
 				<view style="width: 90px;">部门:</view>
 				        <ld-select :list="deptList"
 				        list-key="FName" value-key="FNumber"
@@ -46,9 +46,7 @@
 				        clearable
 				        v-model="form.fdeptID"
 				        @change="deptChange"></ld-select>
-			</view>
-		</view>
-		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
+			</view> -->
 			<view class="action">
 				<view style="width: 130px;">调入仓库:</view>
 				        <ld-select :list="stockList"
@@ -58,6 +56,8 @@
 				        v-model="form.fdcStockID"
 				        @change="stockChange2"></ld-select>
 			</view>
+		</view>
+		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
 			<view class="action" style="width: 100%;">
 				<view class="title" style="width: 40px;">备注:</view>
 				<input name="input" style="font-size: 13px;width: 100%;text-align: left;border-bottom:1px solid ;" v-model="form.fnote"></input>
@@ -116,8 +116,8 @@
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
-							<view class="text-grey">编码:{{item.FNumber}}</view> 
-							<view class="text-grey">名称:{{item.FName}}</view>
+							<view class="text-grey">编码:{{item.number}}</view> 
+							<view class="text-grey">名称:{{item.name}}</view>
 							<view class="text-grey">批号:{{item.FBatchNo}}</view>
 							<view class="text-grey">库存数量:{{item.FQty}}</view>
 							<view class="text-grey">调拨数量:{{item.quantity}}</view>
@@ -218,42 +218,41 @@
 			onLoad: function (option) {
 				let me = this
 				if(JSON.stringify(option) != "{}"){
-					this.isOrder = true
-					 this.isDis = true
+					me.isDis = true
 					me.form.fdeptID = option.FDeptNumber
-				 me.form.FCustNumber = option.FCustNumber
-				 this.startDate = option.startDate
-				 this.endDate = option.endDate 
-				 this.billNo = option.billNo 
-				 me.source = option.tranType 
-				basic.getOrderList({
-					billNo: option.billNo,
-					/* startDate: option.startDate,
-					endDate: option.endDate, */
-					tranType: option.tranType,
-					type: option.type,
-				}).then(res => {
-					if(res.success){
-						let data = res.data
-						for(let i in data){
-							me.cuIList.push({ 
-								Fdate: data[i].Fdate,
-								 FNumber: data[i].FItemNumber,
-								 FName: data[i].FItemName,
-								model: data[i].FModel,
-								 fsourceBillNo: data[i].FBillNo,
-								 Famount: data[i].Famount,
-								 Fauxprice: data[i].Fauxprice,
-								 fsourceEntryID: data[i].FEntryID,
-								 fsourceTranType: data[i].FTranType,
-								 quantity: data[i].Fauxqty,
-								 unitID: data[i].FUnitNumber,
-								 unitName: data[i].FUnitName
-						})
+					 me.form.FCustNumber = option.FCustNumber
+					 this.startDate = option.startDate
+					 this.endDate = option.endDate 
+					 this.billNo = option.billNo 
+					 me.source = option.tranType 
+					basic.getOrderList({
+						billNo: option.billNo,
+						/* startDate: option.startDate,
+						endDate: option.endDate, */
+						tranType: option.tranType,
+						type: option.type,
+					}).then(res => {
+						if(res.success){
+							me.isOrder = true
+							let data = res.data
+							for(let i in data){
+								me.cuIList.push({ 
+									Fdate: data[i].Fdate,
+									 number: data[i].FItemNumber,
+									 name: data[i].FItemName,
+									model: data[i].FModel,
+									 fsourceBillNo: data[i].FBillNo,
+									 Famount: data[i].Famount,
+									 Fauxprice: data[i].Fauxprice,
+									 fsourceEntryID: data[i].FEntryID,
+									 fsourceTranType: data[i].FTranType,
+									 quantity: data[i].Fauxqty,
+									 unitID: data[i].FUnitNumber,
+									 unitName: data[i].FUnitName
+							})
 						}
-										
-						me.form.FCustName = res.data[0].FCustName
-						me.form.bNum = res.data.length
+							me.form.FCustName = res.data[0].FCustName
+							me.form.bNum = res.data.length
 					}
 				}).catch(err => {
 					uni.showToast({
@@ -262,7 +261,7 @@
 					});
 				})
 			}
-			},
+		},
 		 onReady: function() {
 			 var me = this
 			 me.loadModal = true
@@ -315,7 +314,6 @@
 			initMain(){
 				const me = this
 				me.form.fdate = this.getDay('', 0).date
-				console.log(123)
 				basic.getBillNo({'TranType':41}).then(res => {
 					console.log(res)
 					if(res.success){
@@ -366,7 +364,7 @@
 					obj.fentryId = list[i].index
 					obj.fbatchNo = list[i].FBatchNo
 					obj.finBillNo = this.form.finBillNo
-					obj.fitemId = list[i].FNumber
+					obj.fitemId = list[i].number
 					obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
 					obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
 					obj.funitId = list[i].FUnitID
@@ -416,10 +414,22 @@
 				}
 			},
 			saveCom(){
-				this.borrowItem.quantity = this.popupForm.quantity
-				this.borrowItem.fbatchNo = this.popupForm.fbatchNo
-				this.borrowItem.positions = this.popupForm.positions
-				this.modalName2 = null
+				var me = this
+				basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+					if(reso.data != null && reso.data != ''){
+						me.borrowItem.stockName = reso.data['FName'];
+						me.borrowItem.stockId = reso.data['FNumber'];
+						me.borrowItem.quantity = me.popupForm.quantity
+						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+						me.borrowItem.positions = me.popupForm.positions
+						me.modalName2 = null 
+					}else{
+						uni.showToast({
+							icon: 'none',
+							title: '该库位不存在仓库中！',
+						});
+					}
+				})
 			},
 			del(index, item) {
 				this.cuIList.splice(index,1)
@@ -531,26 +541,27 @@
 		fabClick() {
 			var that = this
 			let resultA = []
-			uni.scanCode({
+			uni.scanCode({ 
 				success:function(res){
-					basic.barcodeScan({'uuid':res.result}).then(reso => {
+					warehouse.barcodeScan({'uuid':res.result}).then(reso => {
 						if(reso.success){
+							console.log(reso)
 							if(that.isOrder){
 								//if(reso.data['billNo'] == that.billNo){
 									let number = 0;
 									  for(let i in that.cuIList){
 										  if(reso.data['number'] == that.cuIList[i]['number']){
-										  if(reso.data['stockNumber'] == that.cuIList[i]['stockId'] && reso.data['batchNo'] == that.cuIList[i]['fbatchNo']){
-											  if(reso.data['quantity'] == null){
-											  	reso.data['quantity'] = 1
-											  }
-											  if(reso.data['isEnable'] == 2){
-											  	reso.data['uuid'] = null
-											  }
-											  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(reso.data['quantity'])
-											  number ++
-											  break
-										  } 
+											  if(reso.data['stockNumber'] == that.cuIList[i]['stockId'] && reso.data['batchNo'] == that.cuIList[i]['fbatchNo']){
+												  if(reso.data['quantity'] == null){
+													reso.data['quantity'] = 1
+												  }
+												  if(reso.data['isEnable'] == 2){
+													reso.data['uuid'] = null
+												  }
+												  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(reso.data['quantity'])
+												  number ++
+												  break
+											  } 
 										  }else{
 										  	uni.showToast({
 										  		icon: 'none',
@@ -608,7 +619,7 @@
 									  that.form.bNum = that.cuIList.length
 								  }
 							}
-						}
+						} 
 					}).catch(err => {
 						uni.showToast({
 							icon: 'none',

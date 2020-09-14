@@ -153,7 +153,7 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
-						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
+						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)"  data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
 							<view class="text-grey">编码:{{item.number}}</view>
 							<view class="text-grey">名称:{{item.name}}</view>
@@ -165,8 +165,8 @@
 							<view class="text-grey">流程卡号:{{item.fcardNum}}</view>
 							<view class="text-grey">仓位:{{item.positions}}</view>
 							<view class="text-grey">{{item.stockName}}</view>
-							<view class="text-grey">
-								<picker @change="PickerChange($event, item)" @click.stop="showModal2" :value="pickerVal" :range-key="'FName'" :range="stockList">
+							<view class="text-grey" >
+								<picker @tap.stop="showModal2(index, item)" @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
 										<text class="cuIcon-homefill">
@@ -255,6 +255,8 @@
 			},
 			 onLoad: function (option) {
 				 const me = this
+				 me.loadModal = true
+				 me.initMain()
 				if(JSON.stringify(option) != "{}"){
 					 this.isOrder = true
 					 this.isDis = true
@@ -311,8 +313,7 @@
 			 },
 		 onReady: function() {
 			 var me = this
-			 me.loadModal = true
-			 me.initMain()
+			
 			 if(service.getUsers().length > 0){
 			 	if(service.getUsers()[0].account !='' && service.getUsers()[0].account != "undefined"){
 					me.form.fbillerID = service.getUsers()[0].userId
@@ -509,9 +510,9 @@
 						title: '仓库不允许为空',
 					});
 				}
-				
 			},
 			saveCom(){
+				var me = this
 				if(this.popupForm.quantity > this.popupForm.Fauxqty){
 					uni.showToast({
 						icon: 'none',
@@ -519,11 +520,23 @@
 					});
 					this.popupForm.quantity = 0
 				}else{
-					this.borrowItem.quantity = this.popupForm.quantity
-					this.borrowItem.fbatchNo = this.popupForm.fbatchNo
-					this.borrowItem.positions = this.popupForm.positions
-					this.borrowItem.fcardNum = this.popupForm.fcardNum
-					this.modalName2 = null
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.borrowItem.stockName = reso.data['FName'];
+							me.borrowItem.stockId = reso.data['FNumber'];
+							me.borrowItem.quantity = me.popupForm.quantity
+							me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+							me.borrowItem.positions = me.popupForm.positions
+							me.borrowItem.fcardNum = me.popupForm.fcardNum
+							me.modalName2 = null 
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+					
 				}
 			},
 			del(index, item) {
@@ -618,18 +631,7 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
-						if(reso.data != null && reso.data.length >0){
-							me.popupForm.positions = res.result
-							me.popupForm.positions = res.result
-						}else{
-							uni.showToast({
-								icon: 'none',
-								title: '该库位不存在仓库中！',
-							});
-						}
-						
-					})
+					me.popupForm.positions = res.result
 				},
 			})
 		},
@@ -711,7 +713,6 @@
 									   reso.data.fbatchNo = reso.data.batchNo
 									  that.cuIList.push(reso.data)
 									  that.form.bNum = that.cuIList.length
-									  
 								  }
 							}
 						}

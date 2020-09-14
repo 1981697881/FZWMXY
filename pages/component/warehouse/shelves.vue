@@ -307,10 +307,22 @@
 						})
 					},
 					saveCom(){
-						this.borrowItem.quantity = this.popupForm.quantity
-						this.borrowItem.fbatchNo = this.popupForm.fbatchNo
-						this.borrowItem.positions = this.popupForm.positions
-						this.modalName2 = null
+						var me = this
+						basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+							if(reso.data != null && reso.data != ''){
+								me.borrowItem.stockName = reso.data['FName'];
+								me.borrowItem.stockId = reso.data['FNumber'];
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.borrowItem.positions = me.popupForm.positions
+								me.modalName2 = null 
+							}else{
+								uni.showToast({
+									icon: 'none',
+									title: '该库位不存在仓库中！',
+								});
+							}
+						})
 					},
 					del(index, item) {
 						this.cuIList.splice(index,1)
