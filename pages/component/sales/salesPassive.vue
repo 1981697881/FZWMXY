@@ -11,6 +11,12 @@
 		:direction="direction"
 		 @fabClick="fabClick"
 		 ></uni-fab>
+		 <zhilin-picker
+		     v-model="show"
+		     :data="chooseList"
+		 	:title="title"
+		 	@confirm="chooseClick"
+		 />
 	<view class="box getheight">
 		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
 			<view class="action">
@@ -185,10 +191,13 @@
 	import citySelect from '@/components/city-select/city-select.vue';
 	import loading from '@/components/loading';
 	import service from '@/service.js';
+	 import zhilinPicker from "@/components/zhilin-picker/zhilin-picker.vue"
 	export default {
-		 components: {ruiDatePicker, ldSelect, uniFab, loading, citySelect},
+		 components: {zhilinPicker,ruiDatePicker, ldSelect, uniFab, loading, citySelect},
 			data() {
 				return {
+					show: false,
+					title: '选择库存',
 					formatName: 'FName',
 					pageHeight: 0,
 					headName: '',
@@ -211,6 +220,7 @@
 						fdeptID: '',
 					},
 					borrowItem: {},
+					chooseList: [],
 					popupForm: {
 						fbatchNo: '',
 						positions: '',
@@ -266,6 +276,7 @@
 					 					number: data[i].FItemNumber,
 					 					name: data[i].FItemName,
 					 					model: data[i].FModel,
+					 					FItemID: data[i].FItemID,
 					 					FBatchManager: data[i].FBatchManager,
 					 					fsourceBillNo: data[i].FBillNo,
 					 					Famount: data[i].Famount,
@@ -606,87 +617,99 @@
 				},
 			})
 		},
+		chooseClick(val){
+		 var that = this
+		 var choose = val
+		 let number = 0;
+		 for(let j in choose){
+			if(that.isOrder){
+					  for(let i in that.cuIList){
+						  if(choose[j]['FItemID'] == that.cuIList[i]['FItemID']){
+							if(choose[j]['FStockNumber'] == that.cuIList[i]['stockId'] && choose[j]['FBatchNo'] == that.cuIList[i]['fbatchNo']){
+							  if(choose[j]['quantity'] == null){
+							  	choose[j]['quantity'] = 1
+							  }
+							  if(choose[j]['isEnable'] == 2){
+							  	choose[j]['uuid'] = null
+							  }
+							  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(choose[j]['quantity'])
+							  number ++
+							  break
+							} 											  
+						  }else{
+							uni.showToast({
+								icon: 'none',
+								title: '该物料不在所选列表中！',
+							});
+							number ++
+							break
+						}			
+					  }
+					  if(number == 0){
+						  if(choose[j]['quantity'] == null){
+						  	choose[j]['quantity'] = 1
+						  }
+						  if(choose[j]['isEnable'] == 2){
+						  	choose[j]['uuid'] = null
+						  }
+						choose[j].stockName = choose[j].FStockName
+						choose[j].stockId = choose[j].FStockNumber
+						choose[j].fbatchNo = choose[j].FBatchNo
+						choose[j].number = choose[j].FNumber
+						choose[j].name = choose[j].FName
+						choose[j].unitName = choose[j].FUnitName
+						choose[j].model = choose[j].FModel
+						choose[j].unitID = choose[j].FUnitID
+						  that.cuIList.push(choose[j])
+						  that.form.bNum = that.cuIList.length
+					  }
+			}else{
+				  for(let i in that.cuIList){
+					  if(choose[j]['FItemID'] == that.cuIList[i]['FItemID'] && choose[j]['FStockNumber'] == that.cuIList[i]['stockId'] && choose[j]['FBatchNo'] == that.cuIList[i]['fbatchNo']){
+						  if(choose[j]['quantity'] == null){
+						  	choose[j]['quantity'] = 1
+						  }
+						  if(choose[j]['isEnable'] == 2){
+						  	choose[j]['uuid'] = null
+						  }
+						  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(choose[j]['quantity'])
+						  number ++
+						  break
+					  } 
+				  }
+				  if(number == 0){
+					  if(choose[j]['quantity'] == null){
+					  	choose[j]['quantity'] = 1
+					  }
+					  if(choose[j]['isEnable'] == 2){
+					  	choose[j]['uuid'] = null
+					  }
+					  choose[j].stockName = choose[j].FStockName
+					  choose[j].stockId = choose[j].FStockNumber
+					  choose[j].fbatchNo = choose[j].FBatchNo
+					  choose[j].number = choose[j].FNumber
+					  choose[j].name = choose[j].FName
+					  choose[j].unitName = choose[j].FUnitName
+					  choose[j].model = choose[j].FModel
+					  choose[j].unitID = choose[j].FUnitID
+					  that.cuIList.push(choose[j])
+					  that.form.bNum = that.cuIList.length
+				 }
+			   }
+			}
+		},	
 		fabClick() {
 			var that = this
 			uni.scanCode({
 				success:function(res){
-					basic.barcodeScan({'uuid':res.result}).then(reso => {
+					basic.inventoryByBarcode({'uuid':res.result}).then(reso => {
 						if(reso.success){
-							if(that.isOrder){
-								console.log(reso)
-								///if(reso.data['billNo'] == that.billNo){
-									let number = 0;
-									  for(let i in that.cuIList){
-										  if(reso.data['number'] == that.cuIList[i]['number']){
-											if(reso.data['stockNumber'] == that.cuIList[i]['stockId'] && reso.data['batchNo'] == that.cuIList[i]['fbatchNo']){
-											  if(reso.data['quantity'] == null){
-											  	reso.data['quantity'] = 1
-											  }
-											  if(reso.data['isEnable'] == 2){
-											  	reso.data['uuid'] = null
-											  }
-											  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(reso.data['quantity'])
-											  number ++
-											  break
-											} 											  
-										  }else{
-											uni.showToast({
-												icon: 'none',
-												title: '该物料不在所选列表中！',
-											});
-											number ++
-											break
-										}			
-									  }
-									  if(number == 0){
-										  if(reso.data['quantity'] == null){
-										  	reso.data['quantity'] = 1
-										  }
-										  if(reso.data['isEnable'] == 2){
-										  	reso.data['uuid'] = null
-										  }
-										  reso.data.stockName = reso.data.stockNumber
-										  reso.data.stockId = reso.data.warehouse
-										   reso.data.fbatchNo = reso.data.batchNo
-										  that.cuIList.push(reso.data)
-										  that.form.bNum = that.cuIList.length
-									  }
-								/* }else{
-									uni.showToast({
-										icon: 'none',
-										title: '该物料不在所选单据中！',
-									});
-								} */
-							}else{
-								let number = 0;
-								  for(let i in that.cuIList){
-									  if(reso.data['number'] == that.cuIList[i]['number'] && reso.data['stockNumber'] == that.cuIList[i]['stockId'] && reso.data['batchNo'] == that.cuIList[i]['fbatchNo']){
-										  if(reso.data['quantity'] == null){
-										  	reso.data['quantity'] = 1
-										  }
-										  if(reso.data['isEnable'] == 2){
-										  	reso.data['uuid'] = null
-										  }
-										  that.cuIList[i]['quantity'] =  parseFloat(that.cuIList[i]['quantity']) + parseFloat(reso.data['quantity'])
-										  number ++
-										  break
-									  } 
-								  }
-								  if(number == 0){
-									  if(reso.data['quantity'] == null){
-									  	reso.data['quantity'] = 1
-									  }
-									  if(reso.data['isEnable'] == 2){
-									  	reso.data['uuid'] = null
-									  }
-									  reso.data.stockName = reso.data.stockNumber
-									  reso.data.stockId = reso.data.warehouse
-									  reso.data.fbatchNo = reso.data.batchNo
-									  that.cuIList.push(reso.data)
-									  that.form.bNum = that.cuIList.length
-									  
-								  }
-							}
+							console.log(reso)
+							that.chooseList = []
+							for(let i in reso.data) {
+								that.chooseList.push(reso.data[i])				
+							} 
+							that.show = true
 						}
 					}).catch(err => {
 						uni.showToast({
@@ -694,7 +717,6 @@
 							title: err.msg,
 						});
 					})
-					
 				}
 			});
 		},// ListTouch触摸开始

@@ -8,7 +8,6 @@ import store from '@/store';
 import login from '@/api/login';
 import basic from '@/api/basic';
 import { mapState } from 'vuex';
-
 export default {
 	data() {
 		return {
