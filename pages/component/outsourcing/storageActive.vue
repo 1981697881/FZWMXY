@@ -65,6 +65,7 @@
 				start: '',
 				end: '',
 				keyword: '',
+				onoff: true,
 				pageHeight: 0,
 				cuIconList: [],
 			};

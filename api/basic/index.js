@@ -61,6 +61,14 @@ export default {
             },
 			data: params
         });
+    },//检验库存
+	selectInvQty(params) {
+        return Request().post('/api/invCheck/selectInvQty', {
+            header: {
+				contentType: 'application/json',
+            },
+			data: params
+        });
     },
 	//获取单据
 	getOrderList(params) {

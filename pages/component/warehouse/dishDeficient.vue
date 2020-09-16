@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<loading :loadModal="loadModal"></loading>
-	<cu-custom bgColor="bg-gradual-blue" class="customHead" :isBack="true"><block slot="backText">返回</block><block slot="content">盘亏单</block></cu-custom>
+	<cu-custom bgColor="bg-gradual-blue" class="customHead" :isBack="true"><block slot="backText">返回</block><block slot="content">盘点单</block></cu-custom>
 		<uni-fab
 	    :pattern="pattern"
 	    :horizontal="horizontal"
@@ -122,7 +122,7 @@
 							<view class="text-grey">实存数量:{{item.quantity}}</view>
 							<view class="text-grey">规格:{{item.FModel}}</view>
 							<view class="text-grey">单位:{{item.FUnitName}}</view>
-							<view class="text-grey">盘亏数量:{{item.fauxqty}}</view>
+							<view class="text-grey">盘点数量:{{item.fauxqty}}</view>
 							<view class="text-grey"></view>
 							<view class="text-grey">仓库:{{item.FStockName}}</view>
 							<!-- <view class="text-grey">
@@ -143,7 +143,7 @@
 		</view>
 		<view class="cu-bar tabbar shadow foot">
 			<view class="box text-center">
-				<button class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
+				<button :disabled="isClick" class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
 				<button class="cu-btn bg-blue shadow-blur round lg" style="width: 40%;" @tap="$manyCk(clearList)">清空</button>
 			</view>
 		</view>
@@ -166,6 +166,8 @@
 					headName: '',
 					isOrder: false,
 					loadModal: false,
+					onoff: true,
+					isClick: false,
 					pickerVal: 1,
 					modalName: null,
 					modalName2: null,
@@ -253,16 +255,7 @@
 			},
 			initMain(){
 				const me = this
-				basic.getBillNo({'TranType':43}).then(res => {
-					if(res.success){
-						me.form.finBillNo=res.data
-					}
-				}).catch(err => {
-					uni.showToast({
-						icon: 'none',
-						title: err.msg,
-					});
-				});
+				
 				me.form.fdate = me.getDay('', 0).date
 				basic.getDeptList({}).then(res => {
 					if(res.success){
@@ -286,88 +279,138 @@
 					});
 				})
 				me.loadModal = false
+				me.isClick = false
 			},
 			saveData(){
+				
 				let portData = {}
+				let me = this
 				let list = this.cuIList
-				let array = []
+				let arrayO = []
+				let arrayT = []
 				for(let i in list){
-					let obj = {}
-					obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
-					obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
-					obj.fauxqty = list[i].fauxqty
-					obj.fauxqtyActual = list[i].quantity
-					obj.fauxQtyMust = list[i].FQty
-					obj.fqty = list[i].fauxqty
-					obj.fbatchNo = list[i].FBatchNo
-					obj.fdCStockId = list[i].FStockNumber
-					obj.fentryId = list[i].index
-					obj.fitemId = list[i].FNumber
-					obj.fdCSPId = list[i].positions
-					obj.funitId = list[i].FUnitID
-					array.push(obj)	
+					if(list[i].isPan){
+						let obj = {}
+						obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
+						obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
+						obj.fauxqty = list[i].fauxqty
+						obj.fauxqtyActual = list[i].quantity
+						obj.fauxQtyMust = list[i].FQty
+						obj.fqty = list[i].fauxqty
+						obj.fbatchNo = list[i].FBatchNo
+						obj.fdCStockId = list[i].FStockNumber
+						obj.fentryId = list[i].index
+						obj.fitemId = list[i].FNumber
+						obj.fdCSPId = list[i].positions
+						obj.funitId = list[i].FUnitID
+						arrayO.push(obj)
+					}else{
+						let obj = {}
+						obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
+						obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
+						obj.fauxqty = list[i].fauxqty
+						obj.fauxqtyActual = list[i].quantity
+						obj.fauxQtyMust = list[i].FQty
+						obj.fqty = list[i].fauxqty
+						obj.fbatchNo = list[i].FBatchNo
+						obj.fdCStockId = list[i].FStockNumber
+						obj.fentryId = list[i].index
+						obj.fitemId = list[i].FNumber
+						obj.fdCSPId = list[i].positions
+						obj.funitId = list[i].FUnitID
+						arrayT.push(obj)
+					}
 				}
-				portData.items = array
-				portData.finBillNo = this.form.finBillNo
-				portData.fdate = this.form.fdate
-				portData.fbillerID = this.form.fbillerID
-				portData.fdeptId = this.form.fdeptID
-				console.log(JSON.stringify(portData))
-				if(isPan){
-					warehouse.invLossStockOut(portData).then(res => {
+				if(arrayO.length > 0){
+					this.isClick = true
+					basic.getBillNo({'TranType':43}).then(res => {
 						if(res.success){
-								this.cuIList = []
+							portData.items = arrayO
+							portData.finBillNo = res.data
+							portData.fdate = me.form.fdate
+							portData.fbillerID = me.form.fbillerID
+							portData.fdeptId = me.form.fdeptID
+							warehouse.invLossStockOut(portData).then(reso => {
+								if(reso.success){
+										me.cuIList = []
+										uni.showToast({
+											icon: 'success',
+											title: reso.msg,
+										});
+										me.form.bNum = 0
+										me.initMain()
+								}
+							}).catch(err => {
 								uni.showToast({
-									icon: 'success',
-									title: res.msg,
+									icon: 'none',
+									title: err.msg,
 								});
-								this.form.bNum = 0
-								this.initMain()
+								this.isClick = false
+							})
 						}
 					}).catch(err => {
 						uni.showToast({
 							icon: 'none',
 							title: err.msg,
 						});
-					})
-				}else{
-					warehouse.invProFitStockOut(portData).then(res => {
+						this.isClick = false
+					});
+				}
+				if(arrayT.length > 0){
+					this.isClick = true
+					basic.getBillNo({'TranType':40}).then(res => {
 						if(res.success){
-								this.cuIList = []
+							portData.items = arrayT
+							portData.finBillNo = res.data
+							portData.fdate = me.form.fdate
+							portData.fbillerID = me.form.fbillerID
+							portData.fdeptId = me.form.fdeptID
+							warehouse.invProFitStockOut(portData).then(reso => {
+								if(reso.success){
+										me.cuIList = []
+										uni.showToast({
+											icon: 'success',
+											title: reso.msg,
+										});
+										me.form.bNum = 0
+										me.initMain()
+								}
+							}).catch(err => {
 								uni.showToast({
-									icon: 'success',
-									title: res.msg,
+									icon: 'none',
+									title: err.msg,
 								});
-								this.form.bNum = 0
-								this.initMain()
+								this.isClick = false
+							})
 						}
 					}).catch(err => {
 						uni.showToast({
 							icon: 'none',
 							title: err.msg,
 						});
-					})
+						this.isClick = false
+					});
 				}
 				
 			},
 			saveCom(){
 				if((this.popupForm.FQty - this.popupForm.quantity)< 1){
-					/* return uni.showToast({
-						icon: 'none',
-						title: '盘亏数量不能小于零或等于零',
-					}); */
 					this.isPan = false
 					this.popupForm.fauxqty = Math.round((this.popupForm.quantity - this.popupForm.FQty) * 100) / 100
 					this.borrowItem.fauxqty = this.popupForm.fauxqty
+					this.borrowItem.quantity = this.popupForm.quantity
 					this.borrowItem.FBatchNo = this.popupForm.FBatchNo
 					this.borrowItem.positions = this.popupForm.positions
+					this.borrowItem.isPan = false
 					this.modalName2 = null
 				}else{
-					this.isPan = true
+					this.isPan = true 
 					this.popupForm.fauxqty = Math.round((this.popupForm.FQty - this.popupForm.quantity) * 100) / 100
 					this.borrowItem.fauxqty = this.popupForm.fauxqty
+					this.borrowItem.quantity = this.popupForm.quantity
 					this.borrowItem.FBatchNo = this.popupForm.FBatchNo
 					this.borrowItem.positions = this.popupForm.positions
+					this.borrowItem.isPan = true
 					this.modalName2 = null
 				}
 			},
@@ -389,9 +432,14 @@
 				if(item.fauxqty == null || typeof item.fauxqty == 'undefined'){
 					item.fauxqty = ''
 				}
+				if(item.quantity == null || typeof item.quantity == 'undefined'){
+					item.quantity = ''
+				}
 				this.popupForm = {
 					fauxqty: item.fauxqty,
 					FBatchNo: item.FBatchNo,
+					quantity: item.quantity,
+					FQty: item.FQty,
 					positions: item.positions
 				}
 				this.borrowItem = item
@@ -549,3 +597,4 @@
 	    margin-right: 2px;
 	}
 </style>
+`

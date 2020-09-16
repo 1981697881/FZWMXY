@@ -157,7 +157,7 @@
 		</view>
 		<view class="cu-bar tabbar shadow foot">
 			<view class="box text-center">
-				<button class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
+				<button :disabled="isClick" class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
 				<button class="cu-btn bg-blue shadow-blur round lg" style="width: 40%;" @tap="$manyCk(clearList)">清空</button>
 			</view>
 		</view>
@@ -180,6 +180,8 @@
 					headName: '',
 					isOrder: false,
 					loadModal: false,
+					onoff: true,
+					isClick: false,
 					pickerVal: null,
 					modalName: null,
 					modalName2: null,
@@ -352,8 +354,10 @@
 					});
 				})
 				me.loadModal = false
+				me.isClick = false
 			},
 			saveData(){
+				this.isClick = true
 				let portData = {}
 				let result = []
 				let list = this.cuIList
@@ -432,18 +436,21 @@
 							icon: 'none',
 							title: err.msg,
 						});
+						this.isClick = false
 					}) 
 					}else{
 						uni.showToast({
 							icon: 'none',
 							title: batchMsg,
 						});
+						this.isClick = false
 					}
 				}else{
 					uni.showToast({
 						icon: 'none',
 						title: '仓库不允许为空',
 					});
+					this.isClick = false
 				}
 			},
 			saveCom(){

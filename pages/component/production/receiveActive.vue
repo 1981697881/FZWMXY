@@ -67,6 +67,7 @@
 			return {
 				start: '',
 				end: '',
+				onoff: true,
 				keyword: '',
 				pageHeight: 0,
 				cuIconList: [],

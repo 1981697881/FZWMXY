@@ -139,7 +139,7 @@
 		</view>
 		<view class="cu-bar tabbar shadow foot">
 			<view class="box text-center">
-				<button class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
+				<button :disabled="isClick" class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(saveData)">提交</button>
 				<!-- <button class="cu-btn bg-blue shadow-blur round lg" style="width: 40%;" @tap="$manyCk(clearList)">清空</button> -->
 			</view>
 		</view>
@@ -163,6 +163,8 @@
 					headName: '',
 					isOrder: false,
 					isDis: false,
+					onoff: true,
+					isClick: false,
 					loadModal: false,
 					pickerVal: null,
 					modalName: null,
@@ -320,8 +322,10 @@
 					});
 				});
 				me.loadModal = false
+				me.isClick = false
 			},
 			saveData(){
+				this.isClick = true
 				let result = []
 				let list = this.cuIList
 				let array = []
@@ -336,12 +340,14 @@
 				}
 				console.log(JSON.stringify(array))
 				if(this.form.processID == null || this.form.processID == ''){
+					this.isClick = false
 					return uni.showToast({
 					icon: 'none',
 					title: '工序不能为空',
 					});
 				}
 				if(this.form.fdeptID == null || this.form.fdeptID == ''){
+					this.isClick = false
 					return uni.showToast({
 						icon: 'none',
 						title: '班组不能为空',
@@ -349,18 +355,21 @@
 				}
 				
 				if(array.length <= 0){
+					this.isClick = false
 					return uni.showToast({
 						icon: 'none',
 						title: '请派工',
 					});
 				}
 				if(Number(this.form.bNum)>Number(this.form.planNum)){
+					this.isClick = false
 					return uni.showToast({
 						icon: 'none',
 						title: '不能大于计划数量',
 					});
 				}
 				if(this.form.workDate == null || this.form.workDate == ''){
+					this.isClick = false
 					return uni.showToast({
 						icon: 'none',
 						title: '日期不能为空',
@@ -389,6 +398,7 @@
 							icon: 'none',
 							title: err.msg,
 						});
+						this.isClick = false
 					})
 				
 			},
