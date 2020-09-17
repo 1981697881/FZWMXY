@@ -8,7 +8,7 @@
 			<view class="main" v-if="list.length">
 				<scroll-view scroll-y="true" @scrolltolower="lower" :lower-threshold="1">
 					<view class="scroll-view-item" v-for="(v,i) in list" :key="i" @tap="tapItem(v.RowNumber)" :class="selected.indexOf(v.RowNumber)>-1?'selected':null">
-						<text>名称:{{v.FName}}/编码:{{v.FNumber}}/编码:{{v.FModel}}/数量:{{v.FQty}}/仓库:{{v.FStockName}}/批号:{{v.FBatchNo}}</text>
+						<text>名称:{{v.FName}}/编码:{{v.FNumber}}/规格型号:{{v.FModel}}/数量:{{v.FQty}}/仓库:{{v.FStockName}}/批号:{{v.FBatchNo}}</text>
 						<icon v-show="selected.indexOf(v.RowNumber)>-1" type="success_no_circle" size="22" />
 					</view>
 					<view v-if="showBottom" class="isBottom">已经到底啦~</view>

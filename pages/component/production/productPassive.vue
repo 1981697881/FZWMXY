@@ -109,8 +109,8 @@
 						<view class="flex-sub">
 							<view class="cu-form-group">
 								<view class="title">库位:</view>
-								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
-								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
+								<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FIsStockMgr" v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FIsStockMgr" @tap="$manyCk(scanPosition)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -455,21 +455,36 @@
 			},
 			saveCom(){
 				var me = this
-				basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
-					if(reso.data != null && reso.data != ''){
-						me.borrowItem.stockName = reso.data['FName'];
-						me.borrowItem.stockId = reso.data['FNumber'];
-						me.borrowItem.quantity = me.popupForm.quantity
-						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-						me.borrowItem.positions = me.popupForm.positions
-						me.modalName2 = null 
-					}else{
-						uni.showToast({
-							icon: 'none',
-							title: '该库位不存在仓库中！',
-						});
-					}
-				})
+				if(me.popupForm.FIsStockMgr){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+								if(me.popupForm.positions !='' && me.popupForm.positions !=null){
+									me.borrowItem.stockName = reso.data['FName'];
+									me.borrowItem.stockId = reso.data['FNumber'];
+									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+									me.borrowItem.quantity = me.popupForm.quantity
+									me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+									me.borrowItem.positions = me.popupForm.positions
+									me.modalName2 = null 
+								}else{
+									return uni.showToast({
+										icon: 'none',
+										title: '仓位已启用，请输入仓位！',
+									});
+								}
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					me.borrowItem.quantity = me.popupForm.quantity
+					me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+					me.borrowItem.positions = me.popupForm.positions
+					me.modalName2 = null 
+				}
 			},
 			del(index, item) {
 				this.cuIList.splice(index,1)
@@ -479,6 +494,12 @@
 				this.modalName = e.currentTarget.dataset.target
 			},
 			showModal2(index, item) {
+				if(item.stockId == null || item.stockId == ''){
+					return uni.showToast({
+						icon: 'none',
+						title: '请先选择仓库！',
+					});
+				}
 				this.modalName2 = 'Modal'
 				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
 					item.fbatchNo = ''
@@ -492,6 +513,7 @@
 				this.popupForm = {
 					quantity: item.quantity,
 					fbatchNo: item.fbatchNo,
+					FIsStockMgr: item.FIsStockMgr,
 					positions: item.positions
 				}
 				this.borrowItem = item
@@ -540,7 +562,9 @@
 											if(sList[i].FNumber == val){
 												for(let j in list){
 													me.$set(list[j],'stockName', sList[i].FName);
+													me.$set(list[j],'FIsStockMgr', sList[i].FIsStockMgr);
 													me.$set(list[j],'stockId', val);
+													me.$set(list[j],'positions', '');
 												}
 											}
 											
@@ -552,6 +576,8 @@
 		PickerChange(e, item) {
 			this.$set(item,'stockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'stockId', this.stockList[e.detail.value].FNumber);
+			this.$set(item,'positions', '');
+			this.$set(item,'FIsStockMgr', this.stockList[e.detail.value].FIsStockMgr);
 		},
 		scanPosition(){
 			let me = this
@@ -602,6 +628,7 @@
 										  }
 										  reso.data.stockName = reso.data.stockNumber
 										  reso.data.stockId = reso.data.warehouse
+										  reso.data.FIsStockMgr = reso.data.FIsStockMgr
 										  reso.data.fbatchNo = reso.data.batchNo
 										  that.cuIList.push(reso.data)
 										  that.form.bNum = that.cuIList.length
@@ -636,6 +663,7 @@
 									  }
 									  reso.data.stockName = reso.data.stockNumber
 									  reso.data.stockId = reso.data.warehouse
+									  reso.data.FIsStockMgr = reso.data.FIsStockMgr
 									  reso.data.fbatchNo = reso.data.batchNo
 									  that.cuIList.push(reso.data)
 									  that.form.bNum = that.cuIList.length

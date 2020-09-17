@@ -35,7 +35,7 @@
 			</view>
 		</view>
 		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
-			<view class="action">
+			<!-- <view class="action">
 				<view style="width: 110px;">原仓库:</view>
 				        <ld-select :list="stockList"
 				        list-key="FName" value-key="FNumber"
@@ -43,7 +43,7 @@
 				        clearable
 				        v-model="form.fdcStockID"
 				        @change="stockChange1"></ld-select>
-			</view>
+			</view> -->
 			<!-- <view class="action">
 				<view style="width: 90px;">部门:</view>
 				        <ld-select :list="deptList"
@@ -54,7 +54,7 @@
 				        @change="deptChange"></ld-select>
 			</view> -->
 			<view class="action">
-				<view style="width: 130px;">调入仓库:</view>
+				<view>调入仓库:</view>
 				        <ld-select :list="stockList"
 				        list-key="FName" value-key="FNumber"
 				        placeholder="请选择"
@@ -95,13 +95,24 @@
 						</view>
 					</view>
 				</view>
+				<!-- <view class="cu-item" style="width: 100%;">
+					<view class="flex">
+						<view class="flex-sub">
+							<view class="cu-form-group">
+								<view class="title">原库位:</view>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.fsCSPId"></input>
+								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPositionO)">扫码</button>
+							</view>
+						</view>
+					</view>
+				</view> -->
 				<view class="cu-item" style="width: 100%;">
 					<view class="flex">
 						<view class="flex-sub">
 							<view class="cu-form-group">
-								<view class="title">库位:</view>
-								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
-								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
+								<view class="title">调入库位:</view>
+								<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FIsStockMgr" v-model="popupForm.fdCSPId"></input>
+								<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FIsStockMgr" @tap="$manyCk(scanPositionT)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -118,19 +129,21 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 320upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
 							<view class="text-grey">编码:{{item.FNumber}}</view> 
 							<view class="text-grey">名称:{{item.FName}}</view>
 							<view class="text-grey">批号:{{item.FBatchNo}}</view>
+							<view class="text-grey">原仓位:{{item.fsCSPId}}</view>
+							<view class="text-grey">原仓库:{{item.FStockName}}</view>
 							<view class="text-grey">库存数量:{{item.FQty}}</view>
 							<view class="text-grey">调拨数量:{{item.quantity}}</view>
 							<view class="text-grey">规格:{{item.FModel}}</view>
 							<view class="text-grey">单位:{{item.FUnitName}}</view>
-							<view class="text-grey">{{item.FStockName}}</view>
-							<view class="text-grey">
+							<view class="text-grey">调入仓位:{{item.fdCSPId}}</view>
+							<!-- <view class="text-grey">
 								<picker @change="PickerChange2($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
@@ -138,7 +151,7 @@
 										</text>现仓库</button>
 									</view>
 								</picker>
-							</view>
+							</view> -->
 							<view class="text-grey" style="padding-top: 3px;">{{item.stockName}}</view>
 							<view class="text-grey" style="padding-top: 3px;">
 								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
@@ -204,7 +217,7 @@
 					popupForm: {
 						quantity: '',
 						FBatchNo: '',
-						positions: '',
+						fdCSPId: '',
 					},
 					chooseList: [],
 					skin: false,
@@ -235,8 +248,6 @@
 					me.isDis = true
 					me.form.fdeptID = option.FDeptNumber
 					 me.form.FCustNumber = option.FCustNumber
-					 this.startDate = option.startDate
-					 this.endDate = option.endDate 
 					 this.billNo = option.billNo 
 					me.source = option.tranType 
 					basic.getOrderList({
@@ -244,7 +255,7 @@
 						/* startDate: option.startDate,
 						endDate: option.endDate, */
 						tranType: option.tranType,
-						type: option.type,
+						type: option.type, 
 					}).then(res => {
 						if(res.success){
 							me.isOrder = true
@@ -254,8 +265,15 @@
 									Fdate: data[i].Fdate,
 									 FNumber: data[i].FItemNumber,
 									 FName: data[i].FItemName,
+									 FIsStockMgr: data[i].FIsStockMgr,
 									 FItemID: data[i].FItemID,
 									FModel: data[i].FModel,
+									stockName: data[i].FDCStockName,
+									stockId: data[i].FDCStockNumber,
+									FStockName: data[i].FSCStockName,
+									FStockNumber: data[i].FSCStockNumber,
+									fdCSPId: data[i].FDCSPName,
+									fsCSPId: data[i].FSCSPName,
 									 fsourceBillNo: data[i].FBillNo,
 									 Famount: data[i].Famount,
 									 Fauxprice: data[i].Fauxprice,
@@ -279,7 +297,6 @@
 		},
 		 onReady: function() {
 			 var me = this
-			 
 			 if(service.getUsers().length > 0){
 			 	if(service.getUsers()[0].account !='' && service.getUsers()[0].account != "undefined"){
 					me.form.fbillerID = service.getUsers()[0].userId
@@ -301,7 +318,6 @@
 								}, 1000);
 						     }
 						});
-						
 				}
 			}
 			
@@ -324,7 +340,7 @@
 					});
 				}
 			},
-			initMain(){
+			initMain() {
 				const me = this
 				me.form.fdate = this.getDay('', 0).date
 				basic.getBillNo({'TranType':41}).then(res => {
@@ -382,8 +398,9 @@
 					obj.fitemId = list[i].FNumber
 					obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
 					obj.famount = list[i].Famount != null && typeof list[i].Famount != "undefined" ? list[i].Famount : 0  
-					obj.funitId = list[i].FUnitID
-					obj.fdCSPId = list[i].positions
+					obj.funitId = list[i].FUnitID 
+					obj.fdCSPId = list[i].fdCSPId
+					obj.fsCSPId = list[i].fsCSPId
 					obj.fsourceBillNo = list[i].fsourceBillNo == null || list[i].fsourceBillNo == "undefined" ? '' :  list[i].fsourceBillNo
 					obj.fsourceEntryID = list[i].fsourceEntryID == null || list[i].fsourceEntryID == "undefined" ? '' :  list[i].fsourceEntryID 
 					obj.fsourceTranType = list[i].fsourceTranType == null || list[i].fsourceTranType == "undefined" ? '' :  list[i].fsourceTranType
@@ -430,23 +447,59 @@
 					this.isClick = false
 				}
 			},
-			saveCom(){
+			saveCom(){ 
 				var me = this
-				basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
-					if(reso.data != null && reso.data != ''){
-						me.borrowItem.stockName = reso.data['FName'];
-						me.borrowItem.stockId = reso.data['FNumber'];
-						me.borrowItem.quantity = me.popupForm.quantity
-						me.borrowItem.FBatchNo = me.popupForm.FBatchNo
-						me.borrowItem.positions = me.popupForm.positions
-						me.modalName2 = null 
-					}else{
-						uni.showToast({
-							icon: 'none',
-							title: '该库位不存在仓库中！',
-						});
-					}
-				})
+				if(me.popupForm.FIsStockMgr){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.fdCSPId}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+								if(me.popupForm.fdCSPId !='' && me.popupForm.fdCSPId !=null){
+									me.borrowItem.stockName = reso.data['FName'];
+									me.borrowItem.stockId = reso.data['FNumber'];
+									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+									me.borrowItem.fdCSPId = me.popupForm.fdCSPId
+								}else{
+									return uni.showToast({
+										icon: 'none',
+										title: '仓位已启用，请输入仓位！',
+									});
+								}
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					me.borrowItem.quantity = me.popupForm.quantity
+					me.borrowItem.FBatchNo = me.popupForm.FBatchNo
+					me.modalName2 = null 
+				}
+				/* if(me.popupForm.FIsStockMgrT){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.fdCSPId}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+								if(me.popupForm.fdCSPId !='' && me.popupForm.fdCSPId !=null){
+									me.borrowItem.FStockName = reso.data['FName'];
+									me.borrowItem.FStockNumber = reso.data['FNumber'];
+									me.borrowItem.FIsStockMgrT = reso.data['FIsStockMgr'];
+									me.borrowItem.fdCSPId = me.popupForm.fdCSPId
+								}else{
+									return uni.showToast({
+										icon: 'none',
+										title: '仓位已启用，请输入仓位！',
+									});
+								}
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					me.borrowItem.fdCSPId = me.popupForm.fdCSPId
+				} */
+				
 			},
 			del(index, item) {
 				this.cuIList.splice(index,1)
@@ -456,12 +509,21 @@
 				this.modalName = e.currentTarget.dataset.target
 			},
 			showModal2(index, item) {
+				if(item.stockId == null || item.stockId == ''){
+					return uni.showToast({
+						icon: 'none',
+						title: '请先选择仓库！',
+					});
+				}
 				this.modalName2 = 'Modal'
 				if(item.FBatchNo == null || typeof item.FBatchNo == 'undefined'){
 					item.FBatchNo = ''
 				}
-				if(item.positions == null || typeof item.positions == 'undefined'){
-					item.positions = ''
+				/* if(item.fsCSPId == null || typeof item.fsCSPId == 'undefined'){
+					item.fsCSPId = ''
+				} */
+				if(item.fdCSPId == null || typeof item.fdCSPId == 'undefined'){
+					item.fdCSPId = ''
 				}
 				if(item.quantity == null || typeof item.quantity == 'undefined'){
 					item.quantity = ''
@@ -469,7 +531,9 @@
 				this.popupForm = {
 					quantity: item.quantity,
 					FBatchNo: item.FBatchNo,
-					positions: item.positions
+					/* fsCSPId: item.fsCSPId, */
+					FIsStockMgr: item.FIsStockMgr,
+					fdCSPId: item.fdCSPId
 				}
 				this.borrowItem = item
 			},
@@ -517,6 +581,7 @@
 				 							if(sList[i].FNumber == val){
 				 								for(let j in list){
 													me.$set(list[j],'FStockName', sList[i].FName);
+													me.$set(list[j],'FIsStockMgrT', sList[i].FIsStockMgr);
 													me.$set(list[j],'FStockNumber', val);
 				 									
 				 								}
@@ -532,7 +597,9 @@
 					 		if(sList[i].FNumber == val){
 					 			for(let j in list){
 					 				me.$set(list[j],'stockName', sList[i].FName);
+					 				me.$set(list[j],'FIsStockMgr', sList[i].FIsStockMgr);
 					 				me.$set(list[j],'stockId', val);
+					 				me.$set(list[j],'fdCSPId', '');
 					 			}
 					 		}
 					 	}
@@ -543,15 +610,26 @@
 		PickerChange(e, item) {
 			this.$set(item,'stockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'stockId', this.stockList[e.detail.value].FNumber);
+			this.$set(item,'FIsStockMgr', this.stockList[e.detail.value].FIsStockMgr);
+			this.$set(item,'fdCSPId', '');
 		},PickerChange2(e, item) {
 			this.$set(item,'FStockName', this.stockList[e.detail.value].FName);
 			this.$set(item,'FStockNumber', this.stockList[e.detail.value].FNumber);
+			this.$set(item,'FIsStockMgrT', this.stockList[e.detail.value].FIsStockMgr);
 		},
-		scanPosition(){
+		scanPositionO(){
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.positions = res.result
+					me.popupForm.fsCSPId = res.result
+				},
+			})
+		},
+		scanPositionT(){
+			let me = this
+			uni.scanCode({
+				success:function(res){
+					me.popupForm.fdCSPId = res.result
 				},
 			})
 		},
@@ -593,6 +671,7 @@
 							  }
 							  choose[j].stockName = choose[j].stockNumber
 							  choose[j].stockId = choose[j].warehouse
+							  choose[j].FIsStockMgr = choose[j].FIsStockMgr
 							  that.cuIList.push(choose[j])
 						  }
 				}else{
@@ -618,6 +697,8 @@
 						  }
 						  choose[j].stockName = choose[j].stockNumber
 						  choose[j].stockId = choose[j].warehouse
+						  choose[j].fsCSPId = choose[j].FStockPlacename
+						  choose[j].FIsStockMgr = choose[j].FIsStockMgr
 						  that.cuIList.push(choose[j])
 					  }
 				}  
