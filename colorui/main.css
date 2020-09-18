@@ -228,7 +228,7 @@ switch .uni-switch-input::before,
 radio.radio::before,
 checkbox .uni-checkbox-input::before,
 radio .uni-radio-input::before {
-	display: none;
+	display: initial;
 }
 
 radio.radio[checked]::after,

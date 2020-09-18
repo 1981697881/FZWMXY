@@ -17,6 +17,7 @@
 		 	:title="title"
 		 	@confirm="chooseClick"
 		 />
+		
 	<view class="box getheight">
 		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
 			<view class="action">
@@ -143,7 +144,7 @@
 		</view>
 	</view>
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
-		<view v-for="(item,index) in cuIList" :key="index">
+		<!-- <view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
 					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 220upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
@@ -172,6 +173,58 @@
 						</view>
 					</view>
 				</view>
+		</view> -->
+		<view class="selectTrees">
+		    <!-- 一级分支 -->
+		    <view class="lv1list"  v-for="(item, index) in selectList" :key="index">
+		        <view class="tree-one" style="background: white;width: 100%;margin-top: 2px;height: 150upx;">
+		            <!-- 单选框组件 -->
+		            <checkbox-group v-if="showCheck"
+		                style="position: absolute;height: 80rpx;line-height: 150upx; left:20rpx;z-index: 1;">
+		                <checkbox :checked="item.checked" @click="_chooseAll(item,index)" />
+		            </checkbox-group>
+		            <!-- 名字和iconfont -->
+		            <label style="height:100%;display: flex;align-items: center;padding: 20rpx;position: relative;border-bottom: 1px solid #e4e4e4;"
+		                @click="_showlv2(index)">
+							<view style="clear: both;width: 100%;" class="grid text-center col-2">
+								<view class="itemT">编码:{{item.number}}</view>
+								<view class="itemT">名称:{{item.name}}</view>
+								<view class="itemT">单位:{{item.unitName}}</view>
+								<view class="itemT">规格:{{item.model}}</view>
+								<view class="itemT">{{item.name}}</view>
+								<view class="itemT">{{item.name}}</view>
+							</view>
+							<view class="deleteBtn" v-if="showDelete" @click.stop="deleteItem(item)">删除</view>
+		                <i class="cuIcon-unfold" v-if="item.show"
+		                    style="position: absolute;top: 40%;right: 2%;font-size: 48rpx;"></i>
+		                <i class="cuIcon-fold" v-else
+		                    style="position: absolute;top: 40%;right: 2%;font-size: 48rpx;"></i>
+		            </label>
+		        </view>
+		        <!-- 二级分支 -->
+		        <view v-if='item.show && item.childrenList '>
+		            <view class="tree-two" v-for="(item2, index2) in item.childrenList" :key="index2"
+		                style="display: flex;">
+		                <view class="aui-list-item-inner flexIn">
+		                    <checkbox-group v-if="showCheck">
+		                        <checkbox v-if="!disableLv2Check" :checked="item2.checked"
+		                            @click="_chooseOne(index,index2)" />
+		                        <checkbox :checked="item2.checked" disabled="true" v-else />
+		                    </checkbox-group>
+							<view style="clear: both;width: 100%;" class="grid text-center col-2">
+								<view class="itemO">批号:{{item.number}}</view>
+								<view class="itemO">仓库:{{item.name}}</view>
+								<view class="itemO">仓位:{{item.unitName}}</view>
+								<view class="itemO">库存数:{{item.model}}</view>
+								<view class="itemO" style="width: 80% !important;">
+									<view class="title" style="float: left;margin-left: 25%;">出库数:</view>
+									<input name="input" type="digit" style="font-size: 13px;text-align: left;border-bottom: 1px solid;" v-model="form.fnote"></input>
+								</view>
+							</view>
+		                </view>
+		            </view>
+		        </view>
+		    </view>
 		</view>
 		<view class="cu-bar tabbar shadow foot">
 			<view class="box text-center">
@@ -192,10 +245,61 @@
 	import loading from '@/components/loading';
 	import service from '@/service.js';
 	 import zhilinPicker from "@/components/zhilin-picker/zhilin-picker.vue"
+	import selectTree from "@/components/select-tree/select-tree"
 	export default {
-		 components: {zhilinPicker,ruiDatePicker, ldSelect, uniFab, loading, citySelect},
+		 components: {selectTree, zhilinPicker,ruiDatePicker, ldSelect, uniFab, loading, citySelect},
+			props: {
+			    showCheck: {
+			        //显示多选框
+			        type: Boolean,
+			        default: true
+			    },
+			    disableLv2Check: {
+			        //让二级标题不可选中
+			        type: Boolean,
+			        default: false
+			    },
+			    showDelete: {
+			        //显示删除按钮
+			        type: Boolean,
+			        default: false
+			    }
+			},
 			data() {
 				return {
+					finalList: [],
+					menuKey: 1,
+					 selectList:  [
+					                    {
+					                        name: '水果',
+					                        checked: false,
+					                        show: false,
+					                        childrenList: [
+					                            {
+					                                checked: false,
+					                                name: '西瓜',
+					                            }, {
+					                                checked: false,
+					                                name: '桃子'
+					                            }
+					                        ]
+					                    },
+					                    {
+					                        name: '工具',
+					                        checked: false,
+					                        show: false,
+					                        childrenList: [
+					                            {
+					                                checked: false,
+					                                name: '锄头'
+					                            }, {
+					                                checked: false,
+					                                name: '铲子'
+					                            }
+					                        ]
+					
+					                    }
+					                ],
 					show: false,
 					title: '选择库存',
 					formatName: 'FName',
@@ -291,8 +395,6 @@
 					 			})
 					 		}
 					 		me.form.bNum = res.data.length
-					 		
-					 		
 					 	}
 					 }).catch(err => {
 					 	uni.showToast({
@@ -335,6 +437,91 @@
 			
     },
 		methods: {
+			_showlv2(index) {
+			    //展开二级目录
+			    if (this.selectList[index].show) {
+			        this.$set(this.selectList[index], "show", false);
+			    } else {
+			        this.$set(this.selectList[index], "show", true);
+			    }
+			},
+			_chooseAll(item, index) {
+			    //选中一级目录的所有
+			    if (this.selectList[index].checked) {
+			        //
+			        this.$set(this.selectList[index], "checked", false);
+			        this.selectList[index].childrenList.forEach(item => {
+			            item.checked = false;
+			        });
+			    } else {
+			        this.$set(this.selectList[index], "checked", true);
+			        this.selectList[index].childrenList.forEach(item => {
+			            item.checked = true;
+			        });
+			    }
+			    this.$set(this.selectList[index], "show", true);
+			},
+			_chooseOne(i1, i2) {
+			    if (this.selectList[i1].childrenList[i2].checked) {
+			        //去掉勾选
+			        this.$set(this.selectList[i1], "checked", true);
+			        this.$set(this.selectList[i1].childrenList[i2], "checked", false);
+					if (
+					    this.selectList[i1].childrenList.every(item => item.checked == false)
+					) {
+					    //判断是否全部都是选中
+					    this.$set(this.selectList[i1], "checked", false);
+					}
+			
+			    } else {
+			        //增加勾选
+			        this.$set(this.selectList[i1], "checked", true);
+			        this.$set(this.selectList[i1].childrenList[i2], "checked", true);
+			        if (
+			            this.selectList[i1].childrenList.every(item => item.checked == true)
+			        ) {
+			            //判断是否全部都是选中
+			            this.$set(this.selectList[i1], "checked", true);
+			        }
+			    }
+			},
+			_computedFinalList() {
+			    //计算最终的值
+			    this.finalList = [];
+				this.selectList.forEach(item=>{
+					if(item.checked){
+						this.finalList.push(JSON.parse(JSON.stringify(item))) //对象深拷贝 不然原数据会发生变化
+					}
+				})
+				this.finalList.forEach(item=>{
+					item.childrenList.forEach((item2,index2)=>{
+						if(!item2.checked){
+							item.childrenList.splice(index2,1)
+						}
+					})
+				})
+			},
+			chooseAll() {
+			    //选中页面所有层级
+			    this.selectList.forEach(item => {
+			        this.$set(item, "checked", true);
+			        item.childrenList.forEach(item2 => {
+			            this.$set(item2, "checked", true);
+			        });
+			    });
+			},
+			cancelAll() {
+			    //取消选中页面所有层级
+			    this.selectList.forEach(item => {
+			        this.$set(item, "checked", false);
+			        item.childrenList.forEach(item2 => {
+			            this.$set(item2, "checked", false);
+			        });
+			    });
+			},
+			deleteItem(item) {
+				
+			},
 			cityClick(item) {
 			   this.form.FCustName = item.FName
 			   this.form.FCustNumber = item.FNumber
@@ -819,4 +1006,51 @@
 	    font-size: 16px;
 	    margin-right: 2px;
 	}
+</style>
+<style lang="scss" scoped>
+/* #ifdef APP-PLUS*/
+.selectTrees{
+	
+    margin-bottom: 180rpx;
+}
+/* #endif */
+
+.deleteBtn {
+    position: absolute;
+    right: 10%;
+    background: #f97979;
+    padding: 2rpx 16rpx;
+    border-radius: 4rpx;
+}
+
+.itemT:nth-child(odd) {
+    margin-left: 60rpx;
+	color: #666666;
+    width: 45% !important;
+}
+.itemT:nth-child(even) {
+	color: #666666;
+    width: 40% !important;
+}
+.itemO{
+	color: #666666;
+	width: 50% !important;
+}
+
+.tree-two {
+    padding: 20rpx;
+    color: #666666;
+    border-bottom: 2rpx solid #e2e2e2;
+}
+.flexIn {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+
 </style>
