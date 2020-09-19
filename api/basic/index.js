@@ -113,6 +113,14 @@ export default {
 	        },
 			data: params
 	    });
+	},//根据物料查库存 
+	selectInvListByItemNumber(params) {
+	    return Request().get('/api/invCheck/selectInvListByItemNumber', {
+	        header: {
+	       	 accept: '*/*'
+	        },
+			data: params
+	    });
 	},//获取更新
 	getAndroidVersion(params) {
 	    return Request().post('/api/basic/getAndroidVersion', {

@@ -87,8 +87,8 @@
 				this.end = option.endDate
 				this.fetchData()
 				}else{
-					this.start = this.getDay('', 0).date
-					this.end = this.getDay('', 3).date
+					this.start = this.getDay('', -3).date
+					this.end = this.getDay('', 0).date
 					this.fetchData()
 				}
 			},
