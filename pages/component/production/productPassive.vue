@@ -109,8 +109,8 @@
 						<view class="flex-sub">
 							<view class="cu-form-group">
 								<view class="title">库位:</view>
-								<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FIsStockMgr" v-model="popupForm.positions"></input>
-								<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FIsStockMgr" @tap="$manyCk(scanPosition)">扫码</button>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -494,12 +494,12 @@
 				this.modalName = e.currentTarget.dataset.target
 			},
 			showModal2(index, item) {
-				if(item.stockId == null || item.stockId == ''){
+				/* if(item.stockId == null || item.stockId == ''){
 					return uni.showToast({
 						icon: 'none',
 						title: '请先选择仓库！',
 					});
-				}
+				} */
 				this.modalName2 = 'Modal'
 				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
 					item.fbatchNo = ''

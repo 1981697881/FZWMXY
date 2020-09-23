@@ -133,8 +133,8 @@
 						<view class="flex-sub">
 							<view class="cu-form-group">
 								<view class="title">库位:</view>
-								<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FBatchManager" v-model="popupForm.positions"></input>
-								<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FBatchManager" @tap="$manyCk(scanPosition)">扫码</button>
+								<input name="input" style="border-bottom: 1px solid;"  v-model="popupForm.positions"></input>
+								<button class="cu-btn round lines-red line-red shadow"  @tap="$manyCk(scanPosition)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -555,7 +555,7 @@
 					}else{
 						me.borrowItem.quantity = me.popupForm.quantity
 						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-						me.borrowItem.positions = me.popupForm.positions
+						me.borrowItem.positions = ''
 						me.borrowItem.fcardNum = me.popupForm.fcardNum
 						me.modalName2 = null 
 					}	
@@ -572,12 +572,12 @@
 				this.modalName = null
 			},
 			showModal2(index, item) {
-				if(item.stockId == null || item.stockId == ''){
+				/* if(item.stockId == null || item.stockId == ''){
 					return uni.showToast({
 						icon: 'none',
 						title: '请先选择仓库！',
-					});
-				}
+					}); 
+				} */
 				this.modalName2 = 'Modal' 
 				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
 					item.fbatchNo = ''
@@ -664,7 +664,19 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.positions = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.positions = res.result;
+							me.popupForm.stockName = reso.data['FName'];
+							me.popupForm.stockId = reso.data['FNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
 				},
 			})
 		},
