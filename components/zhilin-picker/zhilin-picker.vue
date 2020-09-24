@@ -7,8 +7,15 @@
 			</view>
 			<view class="main" v-if="list.length">
 				<scroll-view scroll-y="true" @scrolltolower="lower" :lower-threshold="1">
-					<view class="scroll-view-item" v-for="(v,i) in list" :key="i" @tap="tapItem(v.RowNumber)" :class="selected.indexOf(v.RowNumber)>-1?'selected':null">
-						<text>名称:{{v.FName}}/编码:{{v.FNumber}}/规格型号:{{v.FModel}}/数量:{{v.FQty}}/仓库:{{v.FStockName}}/批号:{{v.FBatchNo}}</text>
+					<view style='border-bottom:1px solid #cccccc ;' class="scroll-view-item" v-for="(v,i) in list" :key="i" @tap="tapItem(v.RowNumber)" :class="selected.indexOf(v.RowNumber)>-1?'selected':null">
+						<view style="clear: both;width: 90%;padding:0px;display: inline-block;">
+							<view style="width:50%; float: left;padding:0px;">名称:{{v.FName}}</view>
+							<view style="width:50%;float: left;padding:0px;">编码:{{v.FNumber}}</view>
+							<view style="width:50%;float: left;padding:0px;">规格型号:{{v.FModel}}</view>
+							<view style="width:50%;float: left;padding:0px;">数量:{{v.FQty}}</view>
+							<view style="width:50%;float: left;padding:0px;">仓库:{{v.FStockName}}</view>
+							<view style="width:50%;float: left;padding:0px;">批号:{{v.FBatchNo}}</view>
+						</view>
 						<icon v-show="selected.indexOf(v.RowNumber)>-1" type="success_no_circle" size="22" />
 					</view>
 					<view v-if="showBottom" class="isBottom">已经到底啦~</view>
@@ -191,7 +198,7 @@
 						display: flex;
 						justify-content: space-between;
 						align-items: center;
-						min-height: 80rpx;
+						/* min-height: 80rpx; */
 
 						&.selected {
 							background: rgba($uni-color-primary, .1);
@@ -274,14 +281,13 @@
 
 				scroll-view {
 					height: 100%;
-
 					.scroll-view-item {
 						box-sizing: border-box;
-						padding: 18rpx 44rpx;
+						/* padding: 18rpx 44rpx; */
 						display: flex;
 						justify-content: space-between;
 						align-items: center;
-						min-height: 80rpx;
+						/* min-height: 80rpx; */
 
 						&.selected {
 							background: rgba($uni-color-primary, .1);

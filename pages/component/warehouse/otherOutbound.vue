@@ -425,10 +425,37 @@
 				}
 			},
 			saveCom(){
-				this.borrowItem.quantity = this.popupForm.quantity
-				this.borrowItem.fbatchNo = this.popupForm.fbatchNo
-				this.borrowItem.positions = this.popupForm.positions
-				this.modalName2 = null
+				var me = this
+				if(me.popupForm.FIsStockMgr){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+								if(me.popupForm.positions !='' && me.popupForm.positions !=null){
+									me.borrowItem.stockName = reso.data['stockName'];
+									me.borrowItem.stockId = reso.data['stockNumber'];
+									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+									me.borrowItem.quantity = me.popupForm.quantity
+									me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+									me.borrowItem.positions = me.popupForm.positions
+									me.modalName2 = null 
+								}else{
+									return uni.showToast({
+										icon: 'none',
+										title: '仓位已启用，请输入仓位！',
+									});
+								}
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					me.borrowItem.quantity = me.popupForm.quantity
+					me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+					me.borrowItem.positions = ''
+					me.modalName2 = null 
+				}
 			},
 			del(index, item) {
 				this.cuIList.splice(index,1)
@@ -519,7 +546,19 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.positions = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.positions = res.result;
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
 				},
 			})
 		},

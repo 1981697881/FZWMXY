@@ -518,47 +518,62 @@
 					this.isClick = false
 				}
 			},
+			submitCom(){
+				var me = this
+				if(me.popupForm.FIsStockMgr){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+								if(me.popupForm.positions !='' && me.popupForm.positions !=null){
+									me.borrowItem.stockName = reso.data['stockName'];
+									me.borrowItem.stockId = reso.data['stockNumber'];
+									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+									me.borrowItem.quantity = me.popupForm.quantity
+									me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+									me.borrowItem.positions = me.popupForm.positions
+									me.borrowItem.fcardNum = me.popupForm.fcardNum
+									me.modalName2 = null 
+								}else{
+									return uni.showToast({
+										icon: 'none',
+										title: '仓位已启用，请输入仓位！',
+									});
+								}
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					me.borrowItem.quantity = me.popupForm.quantity
+					me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+					me.borrowItem.positions = ''
+					me.borrowItem.fcardNum = me.popupForm.fcardNum
+					me.modalName2 = null 
+				}
+			},
 			saveCom(){
 				var me = this
-				if(this.popupForm.quantity > this.popupForm.Fauxqty){
-					uni.showToast({
+				if(this.popupForm.quantity > me.borrowItem.Fauxqty){
+					uni.showModal({
+						    title: '温馨提示',
+						    content: '实际入库数量大于订单数量！请确认！',
+						    success: function (res) {
+						        if (res.confirm) {
+						          me.submitCom()
+						        } else if (res.cancel) {
+						            return
+						        }
+						    }
+						});
+					/* uni.showToast({
 						icon: 'none',
 						title: '入库数量不能大于订单数量',
 					});
-					this.popupForm.quantity = 0
+					this.popupForm.quantity = 0 */
 				}else{
-					if(me.popupForm.FIsStockMgr){
-						basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
-							if(reso.data != null && reso.data != ''){
-									if(me.popupForm.positions !='' && me.popupForm.positions !=null){
-										me.borrowItem.stockName = reso.data['FName'];
-										me.borrowItem.stockId = reso.data['FNumber'];
-										me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
-										me.borrowItem.quantity = me.popupForm.quantity
-										me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-										me.borrowItem.positions = me.popupForm.positions
-										me.borrowItem.fcardNum = me.popupForm.fcardNum
-										me.modalName2 = null 
-									}else{
-										return uni.showToast({
-											icon: 'none',
-											title: '仓位已启用，请输入仓位！',
-										});
-									}
-							}else{
-								uni.showToast({
-									icon: 'none',
-									title: '该库位不存在仓库中！',
-								});
-							}
-						})
-					}else{
-						me.borrowItem.quantity = me.popupForm.quantity
-						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-						me.borrowItem.positions = ''
-						me.borrowItem.fcardNum = me.popupForm.fcardNum
-						me.modalName2 = null 
-					}	
+					me.submitCom()	
 				}
 			},
 			del(index, item) {
@@ -664,11 +679,11 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
 						if(reso.data != null && reso.data != ''){
 							me.popupForm.positions = res.result;
-							me.popupForm.stockName = reso.data['FName'];
-							me.popupForm.stockId = reso.data['FNumber'];
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
 							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
 						}else{
 							uni.showToast({

@@ -505,7 +505,19 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.positions = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.positions = res.result;
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
 				},
 			})
 		},

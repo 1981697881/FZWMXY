@@ -99,8 +99,8 @@
 							<view class="flex-sub">
 								<view class="cu-form-group">
 									<view class="title">库位:</view>
-									<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FIsStockMgr" v-model="popupForm.positions" />
-									<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FIsStockMgr" @tap="$manyCk(scanPosition)">扫码</button>
+									<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.positions" />
+									<button class="cu-btn round lines-red line-red shadow" @tap="$manyCk(scanPosition)">扫码</button>
 								</view>
 							</view>
 						</view>
@@ -766,14 +766,14 @@ export default {
 				this.isClick = false;
 			} */
 		},
-		saveCom() {
+		submitCom(){
 			var me = this;
 			if (me.popupForm.FIsStockMgr) {
 				basic.selectFdCStockIdByFdCSPId({ fdCSPId: me.popupForm.positions }).then(reso => {
 					if (reso.data != null && reso.data != '') {
 						if (me.popupForm.positions != '' && me.popupForm.positions != null) {
-							me.borrowItem.stockName = reso.data['FName'];
-							me.borrowItem.stockId = reso.data['FNumber'];
+							me.borrowItem.stockName = reso.data['stockName'];
+							me.borrowItem.stockId = reso.data['stockNumber'];
 							me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
 							me.borrowItem.quantity = me.popupForm.quantity;
 							me.borrowItem.fbatchNo = me.popupForm.fbatchNo;
@@ -799,6 +799,25 @@ export default {
 				me.modalName2 = null;
 			}
 		},
+		saveCom() {
+			var me = this;
+			if (this.popupForm.quantity > me.borrowItem.Fauxqty) {
+				uni.showModal({
+					title: '温馨提示',
+					content: '领料数量大于单据数量！请确认！',
+					success: function(res) {
+						if (res.confirm) {
+							me.submitCom()
+						} else if (res.cancel) {
+							return
+						}
+					}
+				});
+			} else {
+				me.submitCom()
+			}
+			
+		},
 		del(index, item) {
 			this.cuIList.splice(index, 1);
 			this.form.bNum = this.cuIList.length;
@@ -807,12 +826,12 @@ export default {
 			this.modalName = e.currentTarget.dataset.target;
 		},
 		showModal2(index, item) {
-			if (item.stockId == null || item.stockId == '') {
+			/* if (item.stockId == null || item.stockId == '') {
 				return uni.showToast({
 					icon: 'none',
 					title: '请先选择仓库！'
 				});
-			}
+			} */
 			this.modalName2 = 'Modal';
 			if (item.fbatchNo == null || typeof item.fbatchNo == 'undefined') {
 				item.fbatchNo = '';
@@ -898,7 +917,19 @@ export default {
 			let me = this;
 			uni.scanCode({
 				success: function(res) {
-					me.popupForm.positions = res.result;
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.positions = res.result;
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
 				}
 			});
 		},

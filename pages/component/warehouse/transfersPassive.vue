@@ -71,7 +71,7 @@
 		</view>
 	</view>
 	<view class="cu-modal" :class="modalName2=='Modal'?'show':''">
-		<view class="cu-dialog" style="height: 350upx;">
+		<view class="cu-dialog" style="height: 450upx;">
 			<view class="cu-bar bg-white justify-end" style="height: 60upx;">
 				<view class="content">{{popupForm.headName}}</view>
 				<view class="action" @tap="hideModal2">
@@ -95,6 +95,16 @@
 						</view>
 					</view>
 				</view>
+				<view class="cu-item" style="width: 100%;">
+					<view class="flex">
+						<view class="flex-sub">
+							<view class="cu-form-group">
+								<view class="title">流程卡号:</view>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.fcardNum"></input>
+							</view>
+						</view>
+					</view>
+				</view>
 				<!-- <view class="cu-item" style="width: 100%;">
 					<view class="flex">
 						<view class="flex-sub">
@@ -111,8 +121,8 @@
 						<view class="flex-sub">
 							<view class="cu-form-group">
 								<view class="title">调入库位:</view>
-								<input name="input" style="border-bottom: 1px solid;" :disabled="!popupForm.FIsStockMgr" v-model="popupForm.fdCSPId"></input>
-								<button class="cu-btn round lines-red line-red shadow" :disabled="!popupForm.FIsStockMgr" @tap="$manyCk(scanPositionT)">扫码</button>
+								<input name="input" style="border-bottom: 1px solid;"  v-model="popupForm.fdCSPId"></input>
+								<button class="cu-btn round lines-red line-red shadow"  @tap="$manyCk(scanPositionT)">扫码</button>
 							</view>
 						</view>
 					</view>
@@ -143,6 +153,7 @@
 							<view class="text-grey">规格:{{item.FModel}}</view>
 							<view class="text-grey">单位:{{item.FUnitName}}</view>
 							<view class="text-grey">调入仓位:{{item.fdCSPId}}</view>
+							<view class="text-grey">流程卡号:{{item.fcardNum}}</view>
 							<!-- <view class="text-grey">
 								<picker @change="PickerChange2($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
@@ -217,6 +228,7 @@
 					popupForm: {
 						quantity: '',
 						FBatchNo: '',
+						fcardNum: '',
 						fdCSPId: '',
 					},
 					chooseList: [],
@@ -284,6 +296,7 @@
 									 FUnitName: data[i].FUnitName
 							})
 						}
+							
 							me.form.FCustName = res.data[0].FCustName
 							me.form.bNum = res.data.length
 					}
@@ -297,6 +310,7 @@
 		},
 		 onReady: function() {
 			 var me = this
+			 
 			 if(service.getUsers().length > 0){
 			 	if(service.getUsers()[0].account !='' && service.getUsers()[0].account != "undefined"){
 					me.form.fbillerID = service.getUsers()[0].userId
@@ -401,6 +415,7 @@
 					obj.funitId = list[i].FUnitID 
 					obj.fdCSPId = list[i].fdCSPId
 					obj.fsCSPId = list[i].fsCSPId
+					obj.fcardNum = list[i].fcardNum
 					obj.fsourceBillNo = list[i].fsourceBillNo == null || list[i].fsourceBillNo == "undefined" ? '' :  list[i].fsourceBillNo
 					obj.fsourceEntryID = list[i].fsourceEntryID == null || list[i].fsourceEntryID == "undefined" ? '' :  list[i].fsourceEntryID 
 					obj.fsourceTranType = list[i].fsourceTranType == null || list[i].fsourceTranType == "undefined" ? '' :  list[i].fsourceTranType
@@ -447,16 +462,21 @@
 					this.isClick = false
 				}
 			},
-			saveCom(){ 
+			submitCom(){
 				var me = this
 				if(me.popupForm.FIsStockMgr){
 					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.fdCSPId}).then(reso => {
 						if(reso.data != null && reso.data != ''){
+							console.log(reso)
 								if(me.popupForm.fdCSPId !='' && me.popupForm.fdCSPId !=null){
-									me.borrowItem.stockName = reso.data['FName'];
-									me.borrowItem.stockId = reso.data['FNumber'];
+									me.borrowItem.stockName = reso.data['stockName'];
+									me.borrowItem.stockId = reso.data['stockNumber'];
 									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
 									me.borrowItem.fdCSPId = me.popupForm.fdCSPId
+									me.borrowItem.fcardNum = me.popupForm.fcardNum
+									me.borrowItem.quantity = me.popupForm.quantity
+									me.borrowItem.FBatchNo = me.popupForm.FBatchNo
+									me.modalName2 = null 
 								}else{
 									return uni.showToast({
 										icon: 'none',
@@ -473,8 +493,28 @@
 				}else{
 					me.borrowItem.quantity = me.popupForm.quantity
 					me.borrowItem.FBatchNo = me.popupForm.FBatchNo
+					me.borrowItem.fcardNum = me.popupForm.fcardNum
 					me.modalName2 = null 
 				}
+			},
+			saveCom(){ 
+				var me = this
+				if (this.popupForm.quantity > me.borrowItem.Fauxqty) {
+					uni.showModal({
+						title: '温馨提示',
+						content: '调拨数量大于单据数量！请确认！',
+						success: function(res) {
+							if (res.confirm) {
+								me.submitCom()
+							} else if (res.cancel) {
+								return
+							}
+						}
+					});
+				} else {
+					me.submitCom()
+				}
+				
 				/* if(me.popupForm.FIsStockMgrT){
 					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.fdCSPId}).then(reso => {
 						if(reso.data != null && reso.data != ''){
@@ -509,12 +549,12 @@
 				this.modalName = e.currentTarget.dataset.target
 			},
 			showModal2(index, item) {
-				if(item.stockId == null || item.stockId == ''){
+				/* if(item.stockId == null || item.stockId == ''){
 					return uni.showToast({
 						icon: 'none',
 						title: '请先选择仓库！',
 					});
-				}
+				} */
 				this.modalName2 = 'Modal'
 				if(item.FBatchNo == null || typeof item.FBatchNo == 'undefined'){
 					item.FBatchNo = ''
@@ -528,9 +568,13 @@
 				if(item.quantity == null || typeof item.quantity == 'undefined'){
 					item.quantity = ''
 				}
+				if(item.fcardNum == null || typeof item.fcardNum == 'undefined'){
+					item.fcardNum = ''
+				}
 				this.popupForm = {
 					quantity: item.quantity,
 					FBatchNo: item.FBatchNo,
+					fcardNum: item.fcardNum,
 					/* fsCSPId: item.fsCSPId, */
 					FIsStockMgr: item.FIsStockMgr,
 					fdCSPId: item.fdCSPId
@@ -621,7 +665,20 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.fsCSPId = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.fsCSPId = res.result
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+					
 				},
 			})
 		},
@@ -629,7 +686,20 @@
 			let me = this
 			uni.scanCode({
 				success:function(res){
-					me.popupForm.fdCSPId = res.result
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':res.result}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							me.popupForm.fdCSPId = res.result
+							me.popupForm.stockName = reso.data['stockName'];
+							me.popupForm.stockId = reso.data['stockNumber'];
+							me.popupForm.FIsStockMgr = reso.data['FIsStockMgr'];
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+					
 				},
 			})
 		},

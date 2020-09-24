@@ -3,6 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="e28694b8-08e7-4125-8fac-f3a67eaed054" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/zhilin-picker/zhilin-picker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/components/zhilin-picker/zhilin-picker.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/emitPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/emitPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/outsourcing/storagePassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/outsourcing/storagePassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/procurement/procurementPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/procurement/procurementPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/productPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/productPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/production/receivePassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/production/receivePassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/ICReceive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/ICReceive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/InventoryDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/InventoryDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/dishDeficient.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/dishDeficient.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/inventoryProfit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/inventoryProfit.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/otherOutbound.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/otherOutbound.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/shelves.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/shelves.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/undercarriage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/undercarriage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +76,8 @@
       <workItem from="1600477734382" duration="598000" />
       <workItem from="1600516267936" duration="139000" />
       <workItem from="1600651257819" duration="61000" />
+      <workItem from="1600910152833" duration="1211000" />
+      <workItem from="1600934497335" duration="614000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1">
       <created>1599739283645</created>
@@ -104,10 +121,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="0.0.6" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="555" y="118" key="CommitChangelistDialog2" timestamp="1600516385649">
+    <state x="555" y="118" key="CommitChangelistDialog2" timestamp="1600860346451">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="555" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1600516385649" />
+    <state x="555" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1600860346451" />
     <state x="732" y="266" key="FileChooserDialogImpl" timestamp="1599654044136">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -124,9 +141,9 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="453" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1599654027883" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1600516391429">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1600860351615">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1600516391429" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1600860351615" />
   </component>
 </project>
