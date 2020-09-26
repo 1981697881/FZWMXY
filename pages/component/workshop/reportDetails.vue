@@ -2,7 +2,7 @@
 	<view>
 		<loading :loadModal="loadModal"></loading>
 	<cu-custom bgColor="bg-gradual-blue" class="customHead" :isBack="true"><block slot="backText">返回</block><block slot="content">汇报</block></cu-custom>
-		<uni-fab
+		<!-- <uni-fab
 	    :pattern="pattern"
 	    :horizontal="horizontal"
 		:vertical="vertical"
@@ -11,9 +11,9 @@
 		distable
 		:direction="direction"
 		 @fabClick="fabClick"
-		 ></uni-fab>
+		 ></uni-fab> -->
 	<view class="box getheight">
-		<view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
+		<!-- <view class="cu-bar bg-white solid-bottom" style="height: 60upx;">
 			<view class="action">
 				单号:<text>{{form.workNo}}</text>
 			</view>
@@ -49,7 +49,7 @@
 				派工数量:<text>{{form.dispatchNum}}</text>
 			</view>
 			
-		</view>
+		</view> -->
 	</view>
 	<view class="cu-modal" :class="modalName=='Modal'?'show':''">
 		<view class="cu-dialog" style="height: 70%;margin-top: 20%;">
@@ -74,19 +74,29 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;height: 160upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;height: 320upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;" class="grid text-center  col-2" data-number="item.number">
-							<view style="width: 100%;">
+							<!-- <view style="width: 100%;">
 								<view class="text-grey">
 									<button class="cu-btn sm round bg-green shadow" @tap="showModal(index, item)" :disabled="isDis" data-target="Modal">
 									<text class="cuIcon-people">
 									</text>人员:{{item.userName}}</button>
 								</view>
-							</view>
+							</view> -->
+							<view class="text-grey">单号:{{item.workNo}}</view>
+							<view class="text-grey">卡号:{{item.processCard}}</view>
+							<view class="text-grey">金蝶号:{{item.kingDeeNo}}</view>
+							<view class="text-grey">生产批次:{{item.lotNo}}</view>
+							<view class="text-grey">产品编码:{{item.productNumber}}</view>
+							<view class="text-grey">产品名称:{{item.productName}}</view>
+							<view class="text-grey">规格型号:{{item.model}}</view>
+							<view class="text-grey">计划量:{{item.planNum}}</view>
+							<view class="text-grey">派工量:{{item.dispatchNum}}</view>
+							<view class="text-grey">人员:{{item.number}}</view>
 							<view>
 								<view style="float: left;line-height: 70upx;">生产数量:</view>
-								<input name="input" type="number" style="border-bottom: 1px solid;" v-model="item.dispatchNum"></input>
+								<input name="input" type="number" style="border-bottom: 1px solid;" v-model="item.productNum"></input>
 							</view>
 							<view>
 								<view style="float: left;line-height: 70upx;">合格数量:</view>
@@ -161,19 +171,24 @@
 			},
 			 onLoad: function (option) {
 				 let me = this
+				 let list = JSON.parse(option.cutList)
 				if(JSON.stringify(option) != "{}"){
 					 this.isOrder = true
-					 me.form.kingDeeNo = option.kingDeeNo
-					  me.form.productWorkDetailId = option.productWorkDetailId 
-					  me.form.lotNo = option.lotNo 
-					  me.form.model = option.model 
-					  me.form.planNum = option.planNum 
-					  me.form.processCard = option.processCard 
-					  me.form.productName = option.productName 
-					  me.form.productNumber = option.productNumber 
-					  me.form.workNo = option.workNo 
-					  me.startDate = option.startDate
-					  me.endDate = option.endDate
+					 this.cuIList = list
+					 me.startDate = option.startDate
+					 me.endDate = option.endDate
+					 /* list.forEach((item,index) =>{
+						 me.form.kingDeeNo = option.kingDeeNo
+						  me.form.productWorkDetailId = option.productWorkDetailId 
+						  me.form.lotNo = option.lotNo 
+						  me.form.model = option.model 
+						  me.form.planNum = option.planNum 
+						  me.form.processCard = option.processCard 
+						  me.form.productName = option.productName 
+						  me.form.productNumber = option.productNumber 
+						  me.form.workNo = option.workNo 
+						 
+					 }) */
 				 }
 			 },
 		 onReady: function() {
@@ -201,8 +216,6 @@
 						     }
 						});
 						me.initMain()
-						
-						 
 				}
 			}
 			
@@ -264,8 +277,8 @@
 					let obj = {}
 					obj.productNum = list[i].productNum
 					obj.qualifiedNum = list[i].qualifiedNum
-					obj.userId = list[i].userId
-					obj.productWorkDetailId = this.form.productWorkDetailId
+					/* obj.userId = list[i].userId */
+					obj.productWorkDetailId = list[i].productWorkDetailId
 					array.push(obj)	
 				}
 				if(array.length > 0){

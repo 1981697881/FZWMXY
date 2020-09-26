@@ -139,17 +139,18 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 220upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
-						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
-							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
-							<view class="text-grey">编码:{{item.number}}</view>
-							<view class="text-grey">名称:{{item.name}}</view>
-							<view class="text-grey">数量:{{item.quantity}}</view>
-							<view class="text-grey">批号:{{item.fbatchNo}}</view>
-							<view class="text-grey">单位:{{item.FUnitName}}</view>
-							<view class="text-grey">规格:{{item.FModel}}</view>
-							<view class="text-grey"></view>
-							<view class="text-grey">{{item.stockName}}</view>
-							<view class="text-grey">
+						<view style="clear: both;width: 100%;">
+							<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
+								<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
+								<view class="text-grey">编码:{{item.number}}</view>
+								<view class="text-grey">名称:{{item.name}}</view>
+								<view class="text-grey">数量:{{item.quantity}}</view>
+								<view class="text-grey">批号:{{item.fbatchNo}}</view>
+								<view class="text-grey">单位:{{item.FUnitName}}</view>
+								<view class="text-grey">规格:{{item.FModel}}</view>
+								<view class="text-grey">{{item.stockName}}</view>
+							</view>
+							<view class="text-grey text-center">
 								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
@@ -159,6 +160,7 @@
 								</picker>
 								</view>
 						</view>
+						
 						<view class="move">
 							<view class="bg-red" @tap="del(index,item)">删除</view>
 						</view>

@@ -38,14 +38,18 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIconList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 300upx;" >
-						<view style="clear: both;width: 100%;" class="grid text-left col-2" @tap="$manyCk(showList(index, item))" data-target="Modal" data-number="item.number">
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 320upx;" >
+						<view style="clear: both;width: 100%;" class="grid text-left col-2" data-target="Modal" data-number="item.number">
 							<view class="text-grey">任务单号:{{item.workNo}}</view>
-							<view class="text-grey">{{index+1}}</view>
+							<!-- <view class="text-grey">{{index+1}}</view> -->
+							<view class="text-grey">
+								<checkbox class='round blue' @click="chooseBox(item)"></checkbox>
+							</view>
 							<view class="text-grey">卡号:{{item.processCard}}</view>
 							<view class="text-grey">金蝶号:{{item.kingDeeNo}}</view>
 							<view class="text-grey">生产批次:{{item.lotNo}}</view>
 							<view class="text-grey">产品编码:{{item.productNumber}}</view>
+							
 							<view class="text-grey">产品名称:{{item.productName}}</view>
 							<view class="text-grey">规格型号:{{item.model}}</view>
 							<view class="text-grey" style="width: 100%;">计划量:{{item.planNum}}</view>
@@ -56,6 +60,11 @@
 						</view>
 					</view>
 				</view>
+		</view>
+		<view class="cu-bar tabbar shadow foot">
+			<view class="box text-center">
+				<button :disabled="isClick" class="cu-btn bg-green shadow-blur round lg" style="width: 40%;margin-right: 10%;" @tap="$manyCk(showList(index, item))">汇报</button>
+			</view>
 		</view>
 	</scroll-view>
 	</view>
@@ -110,18 +119,42 @@ import ruiDatePicker from '@/components/rattenking-dtpicker/rattenking-dtpicker.
 							headHeight = data.height
 				 　　    }).exec();
 				 setTimeout(function () {
-				 				me.pageHeight= res.windowHeight - infoHeight - headHeight
+				 				me.pageHeight= res.windowHeight - infoHeight - headHeight - 40
 				 		}, 1000);
 				       }
 				 });
 				 
 		},
 		methods: {
+			chooseBox(item){
+				if (item.checked) {
+				    this.$set(item, "checked", false);
+				}else{
+					this.$set(item, "checked", true);
+				}
+			},
 			showList(index, item){
-				uni.navigateTo({
-					//url: '../production/productPassive?Fdate='+item.Fdate+'&FBillNo='+item.FBillNo+'&FNumber='+item.FItemNumber+'&FItemName='+item.FItemName+'&FModel='+item.FModel+'&Fauxqty='+item.Fauxqty+'&fsourceBillNo='+item.FBillNo+'&fsourceEntryID='+item.FSourceEntryID+'&fsourceTranType='+item.FTranType+'&unitNumber='+item.FUnitNumber+'&FUnitName='+item.FUnitName+'&Famount='+item.Famount+'&Fauxprice='+item.Fauxprice,
-					url: '../workshop/reportDetails?workNo='+item.workNo+'&processCard='+item.processCard+'&kingDeeNo='+item.kingDeeNo+'&lotNo='+item.lotNo+'&productNumber='+item.productNumber+'&productName='+item.productName+'&model='+item.model+'&planNum='+item.planNum +'&productWorkDetailId='+item.productWorkDetailId 
-				});
+				let array = []
+				let list = this.cuIconList
+				if(list.length> 0){
+					list.forEach((item,index)=>{
+						if(item.checked){
+							array.push(item)
+						}
+					})
+					uni.navigateTo({
+						//url: '../production/productPassive?Fdate='+item.Fdate+'&FBillNo='+item.FBillNo+'&FNumber='+item.FItemNumber+'&FItemName='+item.FItemName+'&FModel='+item.FModel+'&Fauxqty='+item.Fauxqty+'&fsourceBillNo='+item.FBillNo+'&fsourceEntryID='+item.FSourceEntryID+'&fsourceTranType='+item.FTranType+'&unitNumber='+item.FUnitNumber+'&FUnitName='+item.FUnitName+'&Famount='+item.Famount+'&Fauxprice='+item.Fauxprice,
+						//url: '../workshop/reportDetails?workNo='+item.workNo+'&processCard='+item.processCard+'&kingDeeNo='+item.kingDeeNo+'&lotNo='+item.lotNo+'&productNumber='+item.productNumber+'&productName='+item.productName+'&model='+item.model+'&planNum='+item.planNum +'&productWorkDetailId='+item.productWorkDetailId 
+						url: '../workshop/reportDetails?cutList='+encodeURIComponent(JSON.stringify(array))+'&startDate='+this.start+'&endDate='+this.end
+					});
+				}else{
+					uni.showToast({
+						icon: 'none',
+						title: '无汇报数据',
+					});
+				}
+				
+				
 			},
 			fetchData(val = ''){
 				const me = this
@@ -131,7 +164,11 @@ import ruiDatePicker from '@/components/rattenking-dtpicker/rattenking-dtpicker.
 				}
 				workshop.productWorkReport(this.qFilter(), obj).then(res => {
 					if(res.success){
-						me.cuIconList=res.data.list
+						let data = res.data.list
+						data.forEach((item,index)=>{
+							item.checked = false
+						})
+						me.cuIconList=data
 					}
 				}).catch(err => {
 					uni.showToast({

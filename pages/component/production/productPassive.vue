@@ -129,17 +129,19 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
-						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
-							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
-							<view class="text-grey">编码:{{item.number}}</view>
-							<view class="text-grey">名称:{{item.name}}</view>
-							<view class="text-grey">数量:{{item.quantity}}</view>
-							<view class="text-grey">批号:{{item.fbatchNo}}</view>
-							<view class="text-grey">单位:{{item.unitName}}</view>
-							<view class="text-grey">规格:{{item.model}}</view>
-							<view class="text-grey">仓位:{{item.positions}}</view>
-							<view class="text-grey">{{item.stockName}}</view>
-							<view class="text-grey">
+						<view style="clear: both;width: 100%;">
+							<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
+								<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
+								<view class="text-grey">编码:{{item.number}}</view>
+								<view class="text-grey">名称:{{item.name}}</view>
+								<view class="text-grey">数量:{{item.quantity}}</view>
+								<view class="text-grey">批号:{{item.fbatchNo}}</view>
+								<view class="text-grey">单位:{{item.unitName}}</view>
+								<view class="text-grey">规格:{{item.model}}</view>
+								<view class="text-grey">仓位:{{item.positions}}</view>
+								<view class="text-grey">{{item.stockName}}</view>
+							</view>
+							<view class="text-grey text-center">
 								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
@@ -147,8 +149,9 @@
 										</text>仓库</button>
 									</view>
 								</picker>
-								</view>
+							</view>
 						</view>
+						
 						<view class="move">
 							<view class="bg-red" @tap="del(index,item)">删除</view>
 						</view>
@@ -455,36 +458,46 @@
 			},
 			submitCom(){
 				var me = this
-			if(me.popupForm.FIsStockMgr){
-				basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
-					if(reso.data != null && reso.data != ''){
-							if(me.popupForm.positions !='' && me.popupForm.positions !=null){
+				if(me.popupForm.positions !='' && me.popupForm.positions !=null){
+					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
+						if(reso.data != null && reso.data != ''){
+							if(reso.data['FIsStockMgr']){
 								me.borrowItem.stockName = reso.data['stockName'];
 								me.borrowItem.stockId = reso.data['stockNumber'];
 								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.positions = me.popupForm.positions
 								me.borrowItem.quantity = me.popupForm.quantity
 								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-								me.borrowItem.positions = me.popupForm.positions
 								me.modalName2 = null 
 							}else{
-								return uni.showToast({
-									icon: 'none',
-									title: '仓位已启用，请输入仓位！',
-								});
+								me.borrowItem.stockName = reso.data['stockName'];
+								me.borrowItem.stockId = reso.data['stockNumber'];
+								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.positions = ''
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.modalName2 = null 
 							}
-					}else{
-						uni.showToast({
+						}else{
+							uni.showToast({
+								icon: 'none',
+								title: '该库位不存在仓库中！',
+							});
+						}
+					})
+				}else{
+					if(me.popupForm.FIsStockMgr){
+						return uni.showToast({
 							icon: 'none',
-							title: '该库位不存在仓库中！',
+							title: '仓位已启用，请输入仓位！',
 						});
+					}else{ 
+						me.borrowItem.positions = ''
+						me.borrowItem.quantity = me.popupForm.quantity
+						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+						me.modalName2 = null 
 					}
-				})
-			}else{
-				me.borrowItem.quantity = me.popupForm.quantity
-				me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-				me.borrowItem.positions = me.popupForm.positions
-				me.modalName2 = null 
-			}
+				} 
 			},
 			saveCom(){
 				var me = this

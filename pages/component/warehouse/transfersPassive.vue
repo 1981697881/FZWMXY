@@ -84,7 +84,7 @@
 						<view class="flex-sub">
 							<view class="cu-form-group">
 								<view class="title">批号:</view>
-								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.FBatchNo"></input>
+								<input name="input" style="border-bottom: 1px solid;" v-model="popupForm.fbatchNo"></input>
 							</view>
 						</view>
 						<view class="flex-sub">
@@ -145,7 +145,7 @@
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
 							<view class="text-grey">编码:{{item.FNumber}}</view> 
 							<view class="text-grey">名称:{{item.FName}}</view>
-							<view class="text-grey">批号:{{item.FBatchNo}}</view>
+							<view class="text-grey">批号:{{item.fbatchNo}}</view>
 							<view class="text-grey">原仓位:{{item.fsCSPId}}</view>
 							<view class="text-grey">原仓库:{{item.FStockName}}</view>
 							<view class="text-grey">库存数量:{{item.FQty}}</view>
@@ -227,7 +227,7 @@
 					borrowItem: {},
 					popupForm: {
 						quantity: '',
-						FBatchNo: '',
+						fbatchNo: '',
 						fcardNum: '',
 						fdCSPId: '',
 					},
@@ -407,7 +407,7 @@
 						result.push(list[i].index)
 					}
 					obj.fentryId = list[i].index
-					obj.FBatchNo = list[i].FBatchNo
+					obj.fbatchNo = list[i].fbatchNo
 					obj.finBillNo = this.form.finBillNo
 					obj.fitemId = list[i].FNumber
 					obj.fauxprice = list[i].Fauxprice != null && typeof list[i].Fauxprice != "undefined" ? list[i].Fauxprice : 0
@@ -464,25 +464,28 @@
 			},
 			submitCom(){
 				var me = this
-				if(me.popupForm.FIsStockMgr){
+				if(me.popupForm.fdCSPId !='' && me.popupForm.fdCSPId !=null){
 					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.fdCSPId}).then(reso => {
 						if(reso.data != null && reso.data != ''){
-							console.log(reso)
-								if(me.popupForm.fdCSPId !='' && me.popupForm.fdCSPId !=null){
-									me.borrowItem.stockName = reso.data['stockName'];
-									me.borrowItem.stockId = reso.data['stockNumber'];
-									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
-									me.borrowItem.fdCSPId = me.popupForm.fdCSPId
-									me.borrowItem.fcardNum = me.popupForm.fcardNum
-									me.borrowItem.quantity = me.popupForm.quantity
-									me.borrowItem.FBatchNo = me.popupForm.FBatchNo
-									me.modalName2 = null 
-								}else{
-									return uni.showToast({
-										icon: 'none',
-										title: '仓位已启用，请输入仓位！',
-									});
-								}
+							if(reso.data['FIsStockMgr']){
+								me.borrowItem.stockName = reso.data['stockName'];
+								me.borrowItem.stockId = reso.data['stockNumber'];
+								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.fdCSPId = me.popupForm.fdCSPId
+								me.borrowItem.fcardNum = me.popupForm.fcardNum
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.modalName2 = null 
+							}else{
+								me.borrowItem.stockName = reso.data['stockName'];
+								me.borrowItem.stockId = reso.data['stockNumber'];
+								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.fdCSPId = ''
+								me.borrowItem.fcardNum = me.popupForm.fcardNum
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.modalName2 = null 
+							}
 						}else{
 							uni.showToast({
 								icon: 'none',
@@ -491,13 +494,21 @@
 						}
 					})
 				}else{
-					me.borrowItem.quantity = me.popupForm.quantity
-					me.borrowItem.FBatchNo = me.popupForm.FBatchNo
-					me.borrowItem.fcardNum = me.popupForm.fcardNum
-					me.modalName2 = null 
-				}
+					if(me.popupForm.FIsStockMgr){
+						return uni.showToast({
+							icon: 'none',
+							title: '仓位已启用，请输入仓位！',
+						});
+					}else{ 
+						me.borrowItem.fdCSPId = ''
+						me.borrowItem.fcardNum = me.popupForm.fcardNum
+						me.borrowItem.quantity = me.popupForm.quantity
+						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+						me.modalName2 = null 
+					}
+				} 
 			},
-			saveCom(){ 
+			saveCom(){
 				var me = this
 				if (this.popupForm.quantity > me.borrowItem.Fauxqty) {
 					uni.showModal({
@@ -556,8 +567,8 @@
 					});
 				} */
 				this.modalName2 = 'Modal'
-				if(item.FBatchNo == null || typeof item.FBatchNo == 'undefined'){
-					item.FBatchNo = ''
+				if(item.fbatchNo == null || typeof item.fbatchNo == 'undefined'){
+					item.fbatchNo = ''
 				}
 				/* if(item.fsCSPId == null || typeof item.fsCSPId == 'undefined'){
 					item.fsCSPId = ''
@@ -573,7 +584,7 @@
 				}
 				this.popupForm = {
 					quantity: item.quantity,
-					FBatchNo: item.FBatchNo,
+					fbatchNo: item.fbatchNo,
 					fcardNum: item.fcardNum,
 					/* fsCSPId: item.fsCSPId, */
 					FIsStockMgr: item.FIsStockMgr,
@@ -712,7 +723,7 @@
 				if(that.isOrder){
 						  for(let i in that.cuIList){
 							  if(choose[j]['FItemID'] == that.cuIList[i]['FItemID']){
-								  if(choose[j]['stockNumber'] == that.cuIList[i]['stockId'] && choose[j]['FBatchNo'] == that.cuIList[i]['FBatchNo']){
+								  if(choose[j]['stockNumber'] == that.cuIList[i]['stockId'] && choose[j]['fbatchNo'] == that.cuIList[i]['fbatchNo']){
 									  if(choose[j]['quantity'] == null){
 										choose[j]['quantity'] = 1
 									  }
@@ -741,12 +752,13 @@
 							  }
 							  choose[j].stockName = choose[j].stockNumber
 							  choose[j].stockId = choose[j].warehouse
+							   choose[j].fbatchNo = choose[j].FBatchNo
 							  choose[j].FIsStockMgr = choose[j].FIsStockMgr
 							  that.cuIList.push(choose[j])
 						  }
 				}else{
 					  for(let i in that.cuIList){
-						  if(choose[j]['FItemID'] == that.cuIList[i]['FItemID'] && choose[j]['FStockNumber'] == that.cuIList[i]['FStockNumber'] && choose[j]['FBatchNo'] == that.cuIList[i]['FBatchNo']){
+						  if(choose[j]['FItemID'] == that.cuIList[i]['FItemID'] && choose[j]['FStockNumber'] == that.cuIList[i]['FStockNumber'] && choose[j]['fbatchNo'] == that.cuIList[i]['fbatchNo']){
 							  if(choose[j]['quantity'] == null){
 								choose[j]['quantity'] = 1
 							  }
@@ -767,6 +779,7 @@
 						  }
 						  choose[j].stockName = choose[j].stockNumber
 						  choose[j].stockId = choose[j].warehouse
+						  choose[j].fbatchNo = choose[j].FBatchNo
 						  choose[j].fsCSPId = choose[j].FStockPlacename
 						  choose[j].FIsStockMgr = choose[j].FIsStockMgr
 						  that.cuIList.push(choose[j])

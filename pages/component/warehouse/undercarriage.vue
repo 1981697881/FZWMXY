@@ -124,7 +124,7 @@
 				</view>
 			</view>
 		</view>
-	</view>
+	</view> 
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">

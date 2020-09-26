@@ -151,22 +151,24 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 320upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
-						<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)"  data-target="Modal" data-number="item.number">
-							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
-							<view class="text-grey">编码:{{item.number}}</view>
-							<view class="text-grey">名称:{{item.name}}</view>
-							<view class="text-grey">规格:{{item.model}}</view>
-							<view class="text-grey">单位:{{item.unitName}}</view>
-							<view class="text-grey">{{item.FNoteType}}</view>
-							<view class="text-grey">批号:{{item.fbatchNo}}</view>
-							<view class="text-grey">数量:{{item.quantity}}</view>
-							<view class="text-grey">流程卡号:{{item.fcardNum}}</view>
-							<view class="text-grey">仓位:{{item.positions}}</view>
-							<view class="text-grey">{{item.stockName}}</view>
-							<view class="text-grey" >
-								<picker @tap.stop="showModal2(index, item)" @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
+						<view style="clear: both;width: 100%;">
+							<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)"  data-target="Modal" data-number="item.number">
+								<view class="text-grey">序号:{{item.index=(index + 1)}}</view> 
+								<view class="text-grey">编码:{{item.number}}</view>
+								<view class="text-grey">名称:{{item.name}}</view>
+								<view class="text-grey">规格:{{item.model}}</view>
+								<view class="text-grey">单位:{{item.unitName}}</view>
+								<view class="text-grey">{{item.FNoteType}}</view>
+								<view class="text-grey">批号:{{item.fbatchNo}}</view>
+								<view class="text-grey">数量:{{item.quantity}}</view>
+								<view class="text-grey">流程卡号:{{item.fcardNum}}</view>
+								<view class="text-grey">仓位:{{item.positions}}</view>
+								<view class="text-grey">{{item.stockName}}</view>
+							</view>
+							<view class="text-grey text-center">
+								<picker @change="PickerChange($event, item)" :value="pickerVal" :range-key="'FName'" :range="stockList">
 									<view class="picker">
 										<button class="cu-btn sm round bg-green shadow" >
 										<text class="cuIcon-homefill">
@@ -520,24 +522,28 @@
 			},
 			submitCom(){
 				var me = this
-				if(me.popupForm.FIsStockMgr){
+				if(me.popupForm.positions !='' && me.popupForm.positions !=null){
 					basic.selectFdCStockIdByFdCSPId({'fdCSPId':me.popupForm.positions}).then(reso => {
 						if(reso.data != null && reso.data != ''){
-								if(me.popupForm.positions !='' && me.popupForm.positions !=null){
-									me.borrowItem.stockName = reso.data['stockName'];
-									me.borrowItem.stockId = reso.data['stockNumber'];
-									me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
-									me.borrowItem.quantity = me.popupForm.quantity
-									me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-									me.borrowItem.positions = me.popupForm.positions
-									me.borrowItem.fcardNum = me.popupForm.fcardNum
-									me.modalName2 = null 
-								}else{
-									return uni.showToast({
-										icon: 'none',
-										title: '仓位已启用，请输入仓位！',
-									});
-								}
+							if(reso.data['FIsStockMgr']){
+								me.borrowItem.stockName = reso.data['stockName'];
+								me.borrowItem.stockId = reso.data['stockNumber'];
+								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.positions = me.popupForm.positions
+								me.borrowItem.fcardNum = me.popupForm.fcardNum
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.modalName2 = null 
+							}else{
+								me.borrowItem.stockName = reso.data['stockName'];
+								me.borrowItem.stockId = reso.data['stockNumber'];
+								me.borrowItem.FIsStockMgr = reso.data['FIsStockMgr'];
+								me.borrowItem.positions = ''
+								me.borrowItem.fcardNum = me.popupForm.fcardNum
+								me.borrowItem.quantity = me.popupForm.quantity
+								me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+								me.modalName2 = null 
+							}
 						}else{
 							uni.showToast({
 								icon: 'none',
@@ -546,12 +552,19 @@
 						}
 					})
 				}else{
-					me.borrowItem.quantity = me.popupForm.quantity
-					me.borrowItem.fbatchNo = me.popupForm.fbatchNo
-					me.borrowItem.positions = ''
-					me.borrowItem.fcardNum = me.popupForm.fcardNum
-					me.modalName2 = null 
-				}
+					if(me.popupForm.FIsStockMgr){
+						return uni.showToast({
+							icon: 'none',
+							title: '仓位已启用，请输入仓位！',
+						});
+					}else{ 
+						me.borrowItem.positions = ''
+						me.borrowItem.fcardNum = me.popupForm.fcardNum
+						me.borrowItem.quantity = me.popupForm.quantity
+						me.borrowItem.fbatchNo = me.popupForm.fbatchNo
+						me.modalName2 = null 
+					}
+				} 
 			},
 			saveCom(){
 				var me = this
