@@ -328,6 +328,7 @@
 				this.isClick = true
 				let result = []
 				let list = this.cuIList
+				let me = this
 				let array = []
 				for(let i in list){
 					let obj = {}

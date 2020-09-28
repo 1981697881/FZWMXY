@@ -272,6 +272,7 @@
 				let result = []
 				let list = this.cuIList
 				let array = []
+				let me = this
 				let isBatchNo = false
 				for(let i in list){
 					let obj = {}

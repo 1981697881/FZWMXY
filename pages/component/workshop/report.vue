@@ -153,8 +153,6 @@ import ruiDatePicker from '@/components/rattenking-dtpicker/rattenking-dtpicker.
 						title: '无汇报数据',
 					});
 				}
-				
-				
 			},
 			fetchData(val = ''){
 				const me = this

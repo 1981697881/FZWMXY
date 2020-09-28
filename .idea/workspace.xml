@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e28694b8-08e7-4125-8fac-f3a67eaed054" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/sales/salesPassive.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" beforeDir="false" afterPath="$PROJECT_DIR$/pages/component/warehouse/transfersPassive.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +64,7 @@
       <workItem from="1600910152833" duration="1211000" />
       <workItem from="1600934497335" duration="735000" />
       <workItem from="1600996280989" duration="605000" />
+      <workItem from="1601168797656" duration="45000" />
     </task>
     <task id="LOCAL-00001" summary="0.0.1">
       <created>1599739283645</created>
@@ -117,10 +116,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="0.1.1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="555" y="118" key="CommitChangelistDialog2" timestamp="1600943093040">
+    <state x="555" y="118" key="CommitChangelistDialog2" timestamp="1601291877630">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="555" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1600943093040" />
+    <state x="555" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1601291877630" />
     <state x="732" y="266" key="FileChooserDialogImpl" timestamp="1599654044136">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -137,9 +136,9 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="453" y="167" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1599654027883" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1600943169286">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1601118036869">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1600943169286" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1601118036869" />
   </component>
 </project>
