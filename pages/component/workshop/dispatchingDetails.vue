@@ -83,7 +83,7 @@
 				        list-key="FName" value-key="FNumber"
 				        placeholder="请选择"
 				        clearable
-						disabled
+						
 				        v-model="form.processID"
 				        @change="processChange"></ld-select>
 			</view>
