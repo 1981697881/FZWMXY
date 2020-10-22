@@ -45,14 +45,24 @@
 				</view>
 		</view>
 	</scroll-view>
+	<text v-if="isShow" class="loading-text">{{ loadingType === 0 ? contentText.contentdown : loadingType === 1 ? contentText.contentrefresh : contentText.contentnomore }}</text>
 	</view>
 </template>
 
 <script>
 	import basic from '@/api/basic';
+	var _self,
+		page = 1;
 	export default {
 		data() {
 			return {
+				loadingType: 0,
+				contentText: {
+					contentdown: '上拉显示更多',
+					contentrefresh: '正在加载...',
+					contentnomore: '没有更多数据了'
+				},
+				isShow: true,
 			keyword: '',
 			pageHeight: 0,
 			cuIconList: [],
@@ -71,6 +81,7 @@
 			};
 		},
 		onReady: function() {
+			_self = this
 				 var me = this
 				 uni.getSystemInfo({
 				 　　success: function(res) { // res - 各种参数
@@ -90,7 +101,81 @@
 				       }
 				 });
 		},
+		// 下拉刷新
+		onPullDownRefresh() {
+			this.getNewsList();
+		},
+		// 上拉加载
+		onReachBottom: function() {
+			this.isShow = false
+			page++; //每触底一次 page +1
+			// console.log(_self.cuIconList.length);
+			if (_self.loadingType != 0) {
+				//loadingType!=0;直接返回
+				return false;
+			}
+			_self.loadingType = 1;
+			// console.log(page);
+			uni.showNavigationBarLoading(); //显示加载动画
+			let obj = this.qFilter()
+			obj.pageNum = page
+			basic
+				.getOrderList(obj)
+				.then(res => {
+					if (res.success) {
+						console.log(res)
+						if (_self.cuIconList.length == res.data.total) {
+							//没有数据
+							_self.loadingType = 2;
+							uni.hideNavigationBarLoading(); //关闭加载动画
+							return false;
+						}
+						if(res.data.list.length>0){
+							let dList = res.data.list
+							dList.forEach((item,index) => {
+								_self.cuIconList.push(item)
+							})
+						} 
+						/* for (var i = _self.cuIconList.length; i < res.data.total; i++) {
+							_self.cuIconList = _self.cuIconList.concat(res.data.list[i - 1]); //将数据拼接在一起
+						} */
+						_self.loadingType = 0; //将loadingType归0重置
+						uni.hideNavigationBarLoading(); //关闭加载动画
+						uni.stopPullDownRefresh(); //得到数据后停止下拉刷新
+						this.isShow = true
+					}
+				})
+				.catch(err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.msg
+					});
+				});
+		},
 		methods: {
+			// 产品列表数据
+			getNewsList: function() {
+			   //第一次回去数据
+				_self.loadingType = 0;
+				uni.showNavigationBarLoading();
+				const me = this;
+				basic
+					.inventoryList(this.qFilter())
+					.then(res => {
+						if (res.success) {
+							console.log(res);
+							_self.cuIconList = res.data.list;
+							uni.hideNavigationBarLoading();
+							uni.stopPullDownRefresh(); //得到数据后停止下拉刷新
+						} 
+					})
+					.catch(err => {
+						uni.showToast({
+							icon: 'none',
+							title: err.msg
+						});
+					});
+			},
 			inputChange(e){
 			    this.keyword = e.detail.value
 			 },
@@ -122,22 +207,14 @@
 		qFilter() {
 	       let obj = {}
 	       this.keyword != null && this.keyword != '' ? obj.name = this.keyword : null
+			obj.pageSize = 20;
+			obj.pageNum = 1;
 			return obj
 		},
 		search(){
 			const me = this
 			if (this.keyword != null && typeof this.keyword != 'undefined') {
-				basic.inventoryList(this.qFilter()).then(res => {
-					if(res.success){
-						me.cuIconList=res.data
-
-					}
-				}).catch(err => {
-					uni.showToast({
-						icon: 'none',
-						title: err.msg,
-					});
-				})
+				me.getNewsList()
 			}else{
 				uni.showToast({
 					icon: 'none',
@@ -166,5 +243,13 @@
 	.nav-title::first-letter {
 	    font-size: 16px;
 	    margin-right: 2px;
+	}
+	.loading-text {
+		height: 80upx;
+		line-height: 80upx;
+		font-size: 30upx;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
 	}
 </style>

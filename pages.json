@@ -51,7 +51,10 @@
 		},   
 		{
 			"path": "pages/component/production/receiveActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/production/receivePassive",
@@ -59,7 +62,10 @@
 		},
 		{
 			"path": "pages/component/production/productActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/production/productPassive",
@@ -67,7 +73,10 @@
 		},
 		{
 			"path": "pages/component/sales/salesActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/sales/salesPassive",
@@ -75,7 +84,10 @@
 		},
 		{
 			"path": "pages/component/procurement/procurementActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/procurement/procurementPassive",
@@ -83,7 +95,10 @@
 		},
 		{
 			"path": "pages/component/outsourcing/emitActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/outsourcing/emitPassive",
@@ -91,7 +106,10 @@
 		},
 		{
 			"path": "pages/component/outsourcing/storageActive",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/outsourcing/storagePassive",
