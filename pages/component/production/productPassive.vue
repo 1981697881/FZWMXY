@@ -241,9 +241,8 @@
 					 	 type: option.type,
 					 }).then(res => {
 					 	if(res.success){
-					 		let data = res.data
+					 		let data = res.data.list
 					 			for(let i in data){
-									console.log(data)
 									me.cuIList.push({
 					 					Fdate: data[i].Fdate,
 					 					FBillNo: data[i].FBillNo,
@@ -261,7 +260,7 @@
 					 					quantity: data[i].Fauxqty,
 					 				})
 					 			}
-					 		me.form.bNum = res.data.length
+					 		me.form.bNum = data.length
 					 		
 					 		
 					 	}

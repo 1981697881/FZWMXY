@@ -312,7 +312,7 @@ export default {
 				})
 				.then(res => {
 					if (res.success) {
-						let data = res.data;
+						let data = res.data.list;
 						for (let i in data) {
 							me.cuIList.push({
 								Fdate: data[i].Fdate,
@@ -337,7 +337,7 @@ export default {
 								unitName: data[i].FUnitName
 							});
 						}
-						me.form.bNum = res.data.length;
+						me.form.bNum = data.length;
 					}
 				})
 				.catch(err => {

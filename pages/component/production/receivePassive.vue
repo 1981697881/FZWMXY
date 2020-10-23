@@ -291,7 +291,7 @@ export default {
 				})
 				.then(res => {
 					if (res.success) {
-						let data = res.data;
+						let data = res.data.list;
 						console.log(data);
 						for (let i in data) {
 							me.cuIList.push({
@@ -316,7 +316,7 @@ export default {
 								unitName: data[i].FUnitName
 							});
 						}
-						me.form.bNum = res.data.length;
+						me.form.bNum = data.length;
 					}
 				})
 				.catch(err => {

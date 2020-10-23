@@ -25,7 +25,7 @@
 		<view v-for="(item,index) in cuIconList" :key="index">
 				<view class="cu-list menu-avatar">
 					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;" >
-						<view style="clear: both;width: 100%;" class="grid text-left col-2" @tap="$manyCk(showList(index, item))" data-target="Modal" data-number="item.number">
+						<view style="clear: both;width: 100%;" class="grid text-left col-2" data-target="Modal" data-number="item.number">
 							<view class="text-grey">序号:{{item.index=(index + 1)}}</view>
 							<view class="text-grey">编码:{{item.FNumber}}</view>
 							<view class="text-grey">名称:{{item.FName}}</view>
@@ -120,7 +120,7 @@
 			let obj = this.qFilter()
 			obj.pageNum = page
 			basic
-				.getOrderList(obj)
+				.inventoryList(obj)
 				.then(res => {
 					if (res.success) {
 						console.log(res)
@@ -155,7 +155,7 @@
 		methods: {
 			// 产品列表数据
 			getNewsList: function() {
-			   //第一次回去数据
+			   //第一次回去数据 
 				_self.loadingType = 0;
 				uni.showNavigationBarLoading();
 				const me = this;

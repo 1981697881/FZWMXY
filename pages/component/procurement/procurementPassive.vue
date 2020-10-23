@@ -279,10 +279,11 @@
 						 type: option.type,
 					 }).then(res => {
 					 	if(res.success){
-							let data = res.data
-							me.form.FSupplyName = res.data[0].FSupplyName
-							me.form.FPOStyle = res.data[0].FPOStyle
-							me.form.bNum = res.data.length
+							console.log(res)
+							let data = res.data.list
+							me.form.FSupplyName = data[0].FSupplyName
+							me.form.FPOStyle = data[0].FPOStyle
+							me.form.bNum = data.length
 							for(let i in data){
 								me.cuIList.push({
 									Fdate: data[i].Fdate,
@@ -303,8 +304,6 @@
 									unitName: data[i].FUnitName
 								})
 							}
-							
-					 		
 					 	}
 					 }).catch(err => {
 					 	uni.showToast({

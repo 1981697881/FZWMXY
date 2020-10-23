@@ -271,7 +271,7 @@
 					}).then(res => {
 						if(res.success){
 							me.isOrder = true
-							let data = res.data
+							let data = res.data.list
 							for(let i in data){
 								me.cuIList.push({ 
 									Fdate: data[i].Fdate,
@@ -296,9 +296,8 @@
 									 FUnitName: data[i].FUnitName
 							})
 						}
-							
-							me.form.FCustName = res.data[0].FCustName
-							me.form.bNum = res.data.length
+							me.form.FCustName = data[0].FCustName
+							me.form.bNum = data.length
 					}
 				}).catch(err => {
 					uni.showToast({
