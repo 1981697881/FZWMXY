@@ -1,5 +1,27 @@
 <template name="components">
 	<view>
+		<view class="cu-modal" :class="modalName == 'Modal' ? 'show' : ''">
+			<view class="cu-dialog" style="height: 280upx;">
+				<view class="cu-bar bg-white justify-end" style="height: 60upx;">
+					<view class="content">图号查询</view>
+					<view class="action" @tap="hideModal"><text class="cuIcon-close text-red"></text></view>
+				</view>
+				<view class="padding-sm">
+					<view class="cu-item">
+						<view class="content">
+							<text class="text-grey" style="float: left;">图号：</text>
+							<input name="input" style="font-size: 13px;border-bottom:1px solid #C8C7CC;" v-model="chartNumber" />
+						</view>
+					</view>
+				</view>
+				<view style="clear: both;" class="cu-bar bg-white justify-end padding-bottom-xl">
+					<view class="action">
+						<button class="cu-btn line-green text-green" @tap="$manyCk(scanClick)">扫码查询</button>
+						<button class="cu-btn bg-green margin-left" @tap="$manyCk(fabClick)">按输入结果查询</button>
+					</view>
+				</view>
+			</view>
+		</view>
 		<scroll-view scroll-y class="page">
 			<view class="cu-bar bg-cyan">
 				<view></view>
@@ -11,6 +33,7 @@
 			<view class="nav-list">
 				<navigator
 					hover-class="none"
+					v-if="item.color == 'olive' ? false : true"
 					:url="'/pages/component/' + item.path + '?id=' + item.id"
 					class="nav-li"
 					navigateTo
@@ -21,6 +44,10 @@
 					<view class="nav-title">{{ item.name }}</view>
 					<text :class="'cuIcon-' + item.cuIcon"></text>
 				</navigator>
+				<view v-if="item.color == 'olive'" @tap="$manyCk(showModal)" class="nav-li" :class="'bg-' + item.color" v-for="(item, index) in elements" :key="index">
+					<view class="nav-title">{{ item.name }}</view>
+					<text :class="'cuIcon-' + item.cuIcon"></text>
+				</view>
 			</view>
 			<view class="cu-tabbar-height"></view>
 		</scroll-view>
@@ -39,6 +66,13 @@ export default {
 				basic
 					.getSysMenuById(-1)
 					.then(rest => {
+						if(rest.code == 1){
+							return uni.reLaunch({
+								url: '../login/login'
+							});
+						}else{
+							this.elements = rest.data;
+						}
 						/* let data = rest.data
 							let list = this.elements
 							list.forEach((item, index) => {
@@ -53,7 +87,6 @@ export default {
 								}
 							})
 							console.log(list) */
-						this.elements = rest.data;
 					})
 					.catch(errt => {
 						uni.showToast({
@@ -74,57 +107,62 @@ export default {
 	},
 	data() {
 		return {
+			modalName: null,
+			chartNumber: '',
 			elements: [
-				/* {
-					title: '采购管理',
-					name: 'procurement',
-					color: 'purple',
-					cuIcon: 'vipcard'
-				},
-				{
-					title: '销售管理',
-					name: 'sales',
-					color: 'mauve',
-					cuIcon: 'formfill'
-				},
-				{
-					title: '生产管理',
-					name: 'production',
-					color: 'pink',
-					cuIcon: 'list'
-				},
-				{
-					title: '仓库管理',
-					name: 'warehouse',
-					color: 'brown',
-					cuIcon: 'newsfill'
-				},
-				{
-					title: '委外',
-					name: 'outsourcing',
-					color: 'red',
-					cuIcon: 'formfill'
-				},
-				{
-					title: '车间管理',
-					name: 'workshop',
-					color: 'orange',
-					cuIcon: 'timefill'
-				},
-				{
-					title: '库存查询',
-					name: 'inventory',
-					color: 'green',
-					cuIcon: 'messagefill'
-				},
-				{
-					title: '快速录单',
-					name: 'indent',
-					color: 'olive',
-					cuIcon: 'album'
-				} */
 			]
 		};
+	},
+	methods: {
+		showModal(e) {
+			this.modalName = 'Modal'
+		},
+		hideModal(e) {
+			this.modalName = null
+		},
+		fabClick() {
+			if (this.chartNumber != null && this.chartNumber != '') {
+				// 预览图片
+				uni.navigateTo({
+					url: 'warehouse/documentEnquiry?chartNumber=' + this.chartNumber
+				});
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '请输入图号'
+				});
+			}
+		},
+		scanClick() {
+			var that = this
+			let resultA = []
+			uni.scanCode({
+				success: function(res) {
+					basic
+						.barcodeScan({ uuid: res.result })
+						.then(reso => {
+							console.log(reso);
+							if (reso.data.chartNumber != null && typeof reso.data.chartNumber != 'undefined') {
+								// 预览图片
+								uni.navigateTo({
+									url: 'warehouse/documentEnquiry?chartNumber=' + reso.data.chartNumber
+								});
+							} else {
+								uni.showToast({
+									icon: 'none',
+									title: '该二维码没有图号'
+								});
+							}
+						})
+						.catch(err => {
+							uni.showToast({
+								icon: 'none',
+								title: err.msg
+							})
+						})
+				}
+			})
+		}
 	}
 };
 </script>

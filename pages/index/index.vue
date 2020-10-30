@@ -17,14 +17,13 @@ export default {
 		};
 	},
 	computed: mapState(['forcedLogin', 'hasLogin', 'account']),
-	onReady() {
+	created() {
 		/**
 		 * 默认登录，这情况为已登录过，而登录缓存还在，后台登录，前端不展示登录页
 		 * 检测用户账号密码是否在已缓存的用户列表中
 		 */
 		if (service.getUrls().url != '' && typeof service.getUrls().url != 'undefined') {
 			if (service.getUsers().length > 0) {
-				console.log(service.getUsers()[0].account != '' && service.getUsers()[0].account != 'undefined');
 				if (service.getUsers()[0].account != '' && service.getUsers()[0].account != 'undefined') {
 					const data = {
 						account: service.getUsers()[0].account,

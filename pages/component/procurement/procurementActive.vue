@@ -29,7 +29,7 @@
 		<view class="cu-bar search bg-white" style="height: 60upx;">
 			<view class="search-form round">
 				<text class="cuIcon-search"></text>
-			<input :adjust-position="false" type="text" :value="keyword" @input="inputChange" placeholder="搜索" confirm-type="search"></input>
+			<input :adjust-position="false" type="text" :value="keyword" @input="inputChange" placeholder="搜索" confirm-type="search"/>
 		</view>
 		<view class="action">
 			<button class="cu-btn bg-green shadow-blur round" @tap="$manyCk(search)">搜索</button>						</view>

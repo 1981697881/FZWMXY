@@ -127,7 +127,7 @@
 	<scroll-view scroll-y class="page" :style="{ 'height': pageHeight + 'px' }">
 		<view v-for="(item,index) in cuIList" :key="index">
 				<view class="cu-list menu-avatar">
-					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 260upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
+					<view class="cu-item" style="width: 100%;margin-top: 2px;height: 320upx;"  :class="modalName=='move-box-'+ index?'move-cur':''" 
 				 @touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index" >
 						<view style="clear: both;width: 100%;">
 							<view style="clear: both;width: 100%;" class="grid text-center col-2" @tap="showModal2(index, item)" data-target="Modal" data-number="item.number">
@@ -135,6 +135,8 @@
 								<view class="text-grey">编码:{{item.number}}</view>
 								<view class="text-grey">名称:{{item.name}}</view>
 								<view class="text-grey">数量:{{item.quantity}}</view>
+								<view class="text-grey">应收数量:{{item.Fauxqty}}</view>
+								<view class="text-grey">实收数量:{{item.FAuxStockQty}}</view>
 								<view class="text-grey">批号:{{item.fbatchNo}}</view>
 								<view class="text-grey">单位:{{item.unitName}}</view>
 								<view class="text-grey">规格:{{item.model}}</view>
@@ -254,6 +256,8 @@
 										FBatchManager: data[i].FBatchManager,
 					 					fsourceEntryID: data[i].fsourceEntryID,
 					 					fsourceTranType: data[i].FTranType,
+					 					FAuxStockQty: data[i].FAuxStockQty,
+					 					Fauxqty: data[i].Fauxqty,
 					 					fsourceBillNo: data[i].FBillNo,
 					 					unitID: data[i].FUnitNumber,
 					 					unitName: data[i].FUnitName,
