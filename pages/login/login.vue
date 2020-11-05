@@ -97,6 +97,10 @@
 			}
 		},
 		created(){
+			if(service.getUsers()[0].account !='' && typeof service.getUsers()[0].account != "undefined"){
+			this.account = service.getUsers()[0].account
+			this.password = service.getUsers()[0].password
+			}	
 			if(service.getUrls().url !='' && typeof service.getUrls().url != "undefined"){
 				this.popupForm.URL = service.getUrls().url
 				this.service = true

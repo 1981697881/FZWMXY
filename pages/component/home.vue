@@ -57,22 +57,22 @@
 <script>
 import service from '@/service.js';
 import basic from '@/api/basic';
-export default {
+import login from '@/api/login';
+export default { 
 	created() {
-		console.log(1234);
 		if (service.getUsers().length > 0) {
 			console.log(service.getUsers()[0].account != '' && service.getUsers()[0].account != 'undefined');
 			if (service.getUsers()[0].account != '' && service.getUsers()[0].account != 'undefined') {
 				basic
 					.getSysMenuById(-1)
 					.then(rest => {
-						if(rest.code == 1){
+						/* if(rest.code == 20010){
 							return uni.reLaunch({
 								url: '../login/login'
 							});
-						}else{
+						}else{ */
 							this.elements = rest.data;
-						}
+						/* } */
 						/* let data = rest.data
 							let list = this.elements
 							list.forEach((item, index) => {
@@ -119,6 +119,19 @@ export default {
 		},
 		hideModal(e) {
 			this.modalName = null
+		},
+		logout(){
+			login
+				.logout()
+				.then(reso => {
+					console.log(reso)
+				})
+				.catch(err => {
+					uni.showToast({
+						icon: 'none',
+						title: err.msg
+					})
+				})
 		},
 		fabClick() {
 			if (this.chartNumber != null && this.chartNumber != '') {

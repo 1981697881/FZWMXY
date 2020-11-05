@@ -9,5 +9,12 @@ export default {
             },
 			data: params
         });
+    },// post 请求， 200 响应码
+    logout(params) {
+        return Request().post('/user/logout', {
+            header: {
+				accept: '*/*'
+            },
+        });
     },
 };

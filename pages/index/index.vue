@@ -13,7 +13,7 @@ export default {
 		return {
 			PageCur: 'component',
 			totalSize: 0,
-			 baifen: 0
+			baifen: 0
 		};
 	},
 	computed: mapState(['forcedLogin', 'hasLogin', 'account']),
@@ -28,19 +28,19 @@ export default {
 					const data = {
 						account: service.getUsers()[0].account,
 						password: service.getUsers()[0].password
-					};
+					}; 
 					if (data.account && data.password) {
 						login
 							.login(data)
 							.then(res => {
-								console.log(res.success);
+								console.log(123);
+								console.log(res);
 								if (res.success) {
 									data.userId = res.data['userId'];
 									data.username = res.data['username'];
 									store.commit('login', data);
 									service.clearUser();
 									service.addUser(data);
-									console.log(123);
 								}
 							})
 							.catch(err => {
