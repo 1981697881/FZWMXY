@@ -94,7 +94,7 @@
 							<view class="text-grey">规格型号:{{ item.model }}</view>
 							<view class="text-grey">计划量:{{ item.planNum }}</view>
 							<view class="text-grey">派工量:{{ item.dispatchNum }}</view>
-							<view class="text-grey">人员:{{ item.number }}</view>
+							<view class="text-grey">人员:{{ item.dispatchName }}</view>
 							<view>
 								<view style="float: left;line-height: 70upx;">生产数量:</view>
 								<input name="input" type="digit" @input="checkBlur1($event,item)" style="border-bottom: 1px solid;" v-model="item.productNum" />
@@ -311,6 +311,7 @@ export default {
 				let obj = {};
 				obj.productNum = list[i].productNum;
 				obj.qualifiedNum = list[i].qualifiedNum;
+				obj.dispatchId = list[i].dispatchId;
 				/* obj.userId = list[i].userId */
 				if (list[i].productNum > 0 && list[i].qualifiedNum > 0) {
 					isCheck = true;

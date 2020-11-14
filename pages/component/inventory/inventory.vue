@@ -186,12 +186,18 @@
 				success:function(res){
 					if(resultA.indexOf(res.result)==-1) {
 						basic.inventoryByBarcode({'uuid':res.result}).then(reso => {
-						//if(reso.success){
-							console.log(reso)
-							for(let i in reso.data) {
-								that.cuIconList.push(reso.data[i])				
-							}	 
-						//}
+						if(reso.success){
+							if(reso.data.length > 0){
+								for(let i in reso.data) {
+									that.cuIconList.push(reso.data[i])				
+								}	 
+							}else{
+								uni.showToast({
+									icon: 'none',
+									title: '无数据',
+								});
+							}
+						}
 						}).catch(err => {
 							uni.showToast({
 								icon: 'none',

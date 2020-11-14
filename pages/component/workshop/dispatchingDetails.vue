@@ -128,7 +128,7 @@
 							</view>
 							<view>
 								<view style="float: left;line-height: 60upx;">派工量:</view>
-								<input name="input" type="number" style="border-bottom: 1px solid;" @input='sumCount($event, item)' v-model="item.dispatchNum"></input>
+								<input name="input" type="number" style="border-bottom: 1px solid;" @input='sumCount($event, item)' v-model="item.dispatchNum"/>
 							</view>
 							</view>
 						<view class="move">
@@ -336,6 +336,7 @@
 					obj.dispatchNum = list[i].dispatchNum
 					obj.processId = this.form.processID
 					obj.processTeamId = this.form.fdeptID
+					obj.workDate = this.form.workDate
 					obj.productWorkDetailId = this.form.productWorkDetailId
 					array.push(obj)
 				}
@@ -376,7 +377,7 @@
 						title: '日期不能为空',
 					});
 				}
-					workshop.productWorkDispatchAdd(JSON.stringify(array)).then(res => {
+				workshop.productWorkDispatchAdd(JSON.stringify(array)).then(res => {
 						if(res.success){
 							this.cuIList = []
 							uni.showToast({

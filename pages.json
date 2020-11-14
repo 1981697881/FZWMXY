@@ -165,11 +165,17 @@
 		},
 		{
 			"path": "pages/component/workshop/dispatching",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/workshop/report",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
 			"path": "pages/component/workshop/dispatchingDetails",

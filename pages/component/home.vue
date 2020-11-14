@@ -135,9 +135,10 @@ export default {
 		},
 		fabClick() {
 			if (this.chartNumber != null && this.chartNumber != '') {
+				console.log(this.chartNumber)
 				// 预览图片
 				uni.navigateTo({
-					url: 'warehouse/documentEnquiry?chartNumber=' + this.chartNumber
+					url: '/pages/component/warehouse/documentEnquiry?chartNumber=' + this.chartNumber
 				});
 			} else {
 				uni.showToast({
@@ -154,11 +155,11 @@ export default {
 					basic
 						.barcodeScan({ uuid: res.result })
 						.then(reso => {
-							console.log(reso);
 							if (reso.data.chartNumber != null && typeof reso.data.chartNumber != 'undefined') {
+							console.log(reso);
 								// 预览图片
 								uni.navigateTo({
-									url: 'warehouse/documentEnquiry?chartNumber=' + reso.data.chartNumber
+									url: '/pages/component/warehouse/documentEnquiry?chartNumber=' + reso.data.chartNumber
 								});
 							} else {
 								uni.showToast({
