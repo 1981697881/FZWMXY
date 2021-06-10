@@ -90,6 +90,9 @@
 		},
 		watch: {
 			sValue (val) {
+				console.log(val)
+				console.log(this.list)
+				console.log(412414)
 					  this.bValue = this.getBValye(val)
 					  this.$emit('change', val)
 			}

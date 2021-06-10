@@ -48,7 +48,7 @@
 							<view class="text-grey">应收数量:{{item.Fauxqty}}</view>
 							<view class="text-grey">制单人:{{item.Fbiller}}</view>
 							<view class="text-grey">金蝶号:{{item.FKDNo}}</view>
-							<view class="text-grey">流水卡号:{{item.FCardNum}}</view>
+							<view class="text-grey">流程卡号:{{item.FCardNum}}</view>
 							<view class="text-grey" style="width: 100%;">线路名称:{{item.FTranWay}}</view>
 						</view>
 					</view>

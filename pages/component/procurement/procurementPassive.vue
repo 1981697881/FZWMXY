@@ -43,7 +43,7 @@
 			</view>
 			<view class="action">
 				<view style="width: 90px;">仓库:</view>
-				        <ld-select :list="stockList"
+				       <ld-select :list="stockList"
 				        list-key="FName" value-key="FNumber"
 				        placeholder="请选择"
 				        clearable

@@ -138,7 +138,7 @@
 			</view> -->
 			<view class="selectTrees">
 				<!-- 一级分支 -->
-				<view class="lv1list" v-for="(item, index) in cuIList" :key="index">
+				<view class="lv1list" v-for="(item, index) in cuIList" :key="index" @longpress="deleteItem(index, item)">
 					<view class="tree-one" style="background: white;width: 100%;margin-top: 2px;height: 150upx;">
 						<!-- 单选框组件 -->
 						<checkbox-group v-if="showCheck" style="position: absolute;height: 80rpx;line-height: 150upx; left:20rpx;z-index: 1;">
@@ -154,7 +154,7 @@
 								<view class="itemT">应发数量:{{ item.Fauxqty }}</view>
 								<view class="itemT">实际数量:{{ item.FCounty }}</view>
 							</view>
-							<view class="deleteBtn" v-if="showDelete" @click.stop="deleteItem(item, index)">删除</view>
+							<!-- <view class="deleteBtn" v-if="showDelete" @click.stop="deleteItem(item, index)">删除</view> -->
 							<i class="cuIcon-unfold" v-if="item.show" style="position: absolute;top: 40%;right: 2%;font-size: 48rpx;"></i>
 							<i class="cuIcon-fold" v-else style="position: absolute;top: 40%;right: 2%;font-size: 48rpx;"></i>
 						</label>
@@ -539,7 +539,18 @@ export default {
 			});
 		},
 		deleteItem(item,index) {
-			this.cuIList.splice(index, 1);
+			let me = this
+			uni.showModal({
+				title: '温馨提示',
+				content: '是否删除当前行,删除将无法复原？',
+				cancelText: '取消',
+				confirmText: '确定',
+				success: res => {
+					if (res.confirm) {
+						me.cuIList.splice(index, 1);
+					}
+				}
+			});
 		},
 		clearList() {
 			const that = this;
